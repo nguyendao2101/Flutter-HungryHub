@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hungry_hub/view/login_view.dart';
 import 'package:flutter_hungry_hub/widgets/common/image_extention.dart';
+import 'package:flutter_hungry_hub/widgets/common_widget/button/bassic_button.dart';
 import 'package:get/get.dart';
 
 class LoadImagePannerView extends StatefulWidget {
@@ -92,9 +93,10 @@ class _LoadImagePannerViewState extends State<LoadImagePannerView> {
                     child: Text(
                       tiltlePanner[index],
                       style: const TextStyle(
-                        fontSize: 20,
+                        fontSize: 24,
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
+                        fontFamily: 'Poppins'
                       ),
                     ),
                   );
@@ -113,18 +115,18 @@ class _LoadImagePannerViewState extends State<LoadImagePannerView> {
             top: MediaQuery.of(context).size.height * 0.5, // Vị trí của đoạn văn bản
             left: 0,
             right: 0,
-            child: const Padding(
+            child:  const Padding(
               padding: EdgeInsets.all(20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     'Get all your loved foods in one once place,',
-                    style: TextStyle(fontSize: 16, color: Colors.black),
+                    style: TextStyle(fontSize: 16, color: Colors.black, fontFamily: 'Poppins', fontWeight: FontWeight.w500),
                   ),
                   Text(
                     'you just place the order we do the rest',
-                    style: TextStyle(fontSize: 16, color: Colors.black),
+                    style: TextStyle(fontSize: 16, color: Colors.black, fontFamily: 'Poppins', fontWeight: FontWeight.w500),
                   ),
                 ],
               ),
@@ -163,34 +165,19 @@ class _LoadImagePannerViewState extends State<LoadImagePannerView> {
           // 5. Container NEXT
           Positioned(
             top: MediaQuery.of(context).size.height * 0.7, // Đặt cách dưới text description
-            left: (MediaQuery.of(context).size.width - 300) / 2,
-            right: (MediaQuery.of(context).size.width - 300) / 2,
-            child: GestureDetector(
-              onTap: () {
-                // Lấy trang hiện tại của _pageController1 và thay đổi trang của tất cả PageView
-                int currentPage = _pageController1.page?.toInt() ?? 0;
-                _pageController1.jumpToPage(currentPage + 1);
-                _pageController2.jumpToPage(currentPage + 1);
-                _pageController3.jumpToPage(currentPage + 1);
-                if(currentPage==2){
-                  Get.to(() => const LoginView());
-                }
-              },
-              child: Container(
-                width: 200,
-                height: 66, // Chiếm 30% chiều cao
-                decoration: const BoxDecoration(
-                  color: Color(0xffFFCA28),
-                ),
-                child: const Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'NEXT',
-                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20),
-                  ),
-                ),
-              ),
-            ),
+            left: (MediaQuery.of(context).size.width - 300) / 2.5,
+            right: (MediaQuery.of(context).size.width - 300) / 2.5,
+            child: BasicAppButton(
+              onPressed: (){
+              // Lấy trang hiện tại của _pageController1 và thay đổi trang của tất cả PageView
+              int currentPage = _pageController1.page?.toInt() ?? 0;
+              _pageController1.jumpToPage(currentPage + 1);
+              _pageController2.jumpToPage(currentPage + 1);
+              _pageController3.jumpToPage(currentPage + 1);
+              if(currentPage==2){
+                Get.to(() => const LoginView());
+              }
+            }, title: 'NEXT', sizeTitle: 16, colorButton: const Color(0xffFFCA28), height: 66, radius: 12,),
           ),
           Positioned(
             top: MediaQuery.of(context).size.height * 0.78, // Vị trí của đoạn văn bản
@@ -207,7 +194,7 @@ class _LoadImagePannerViewState extends State<LoadImagePannerView> {
                   children: [
                     Text(
                       'Skip',
-                      style: TextStyle(fontSize: 16, color: Colors.black),
+                      style: TextStyle(fontSize: 16, color: Colors.black, fontFamily: 'Poppins', fontWeight: FontWeight.w400),
                     ),
                   ],
                 ),

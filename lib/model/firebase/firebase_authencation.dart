@@ -18,6 +18,7 @@ class FirAuth {
     String hoTen,
     String addRess,
     String sex,
+      String numberPhone,
     String role, // Nhận tham số role
     Function onSuccess,
     Function(String) onRegisterError,
@@ -26,7 +27,7 @@ class FirAuth {
         .createUserWithEmailAndPassword(email: email, password: passWord)
         .then((user) {
       if (user.user != null) {
-        _createUser(user.user!.uid, hoTen, addRess, sex, role, onSuccess);
+        _createUser(user.user!.uid, hoTen, addRess, sex, numberPhone, role, onSuccess);
       }
     }).catchError((err) {
       if (err is FirebaseAuthException) {
@@ -129,13 +130,15 @@ class FirAuth {
     }
   }
 
-  void _createUser(String userId, String hoTen, String addRess, String sex,
+  void _createUser(String userId, String hoTen, String addRess, String sex, String numberPhone,
       String? role, Function onSuccess) {
+    print("Debug: sex = $sex, numberPhone = $numberPhone"); // Kiểm tra giá trị
     var user = {
       'HoTen': hoTen,
       'AddRess': addRess,
       'Sex': sex,
-      'role': role ?? 'user', // Gán mặc định là "user" nếu role null
+      'NumberPhone': numberPhone,
+      'role': role ?? 'user',
     };
     var ref = FirebaseDatabase.instance.ref().child('users');
     ref.child(userId).set(user).then((_) {
@@ -144,6 +147,7 @@ class FirAuth {
       print("Error: $err");
     });
   }
+
 
   void _onSignUpErr(String code, Function(String) onRegisterError) {
     switch (code) {

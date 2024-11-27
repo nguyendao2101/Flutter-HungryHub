@@ -1,4 +1,4 @@
-String baseImagePath = 'images';
+String baseImagePath = 'assets/images';
 
 class ImageAsset{
   //logo
@@ -10,6 +10,12 @@ class ImageAsset{
   static String locationPanner1 = '$baseImagePath/location_panner1.png';
   static String locationPanner2 = '$baseImagePath/location_panner2.png';
   static String locationPanner3 = '$baseImagePath/location_panner3.png';
+
+  //sign up
+  static String facebook = '$baseImagePath/facebook.png';
+  static String google = '$baseImagePath/google.png';
+
+
 
 
 }
