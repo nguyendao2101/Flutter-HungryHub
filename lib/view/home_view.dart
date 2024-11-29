@@ -12,7 +12,7 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text('body'),
+        child: Text('home'),
       ),
     );
   }

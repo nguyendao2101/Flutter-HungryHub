@@ -87,7 +87,7 @@ class FirAuth {
           } else {
             print('form role: $userRole');
             // Get.offAll(() => const MainScreenUserView(initialIndex: 0,));
-            Get.offAll(() => const MainNavView());
+            Get.offAll(() => const MainNavView(initialIndex: 0,));
           }
         } else {
           print('Không tìm thấy dữ liệu người dùng.');

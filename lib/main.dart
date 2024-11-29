@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hungry_hub/firebase_options.dart';
 import 'package:flutter_hungry_hub/view/main_logo_app_view.dart';
+import 'package:flutter_hungry_hub/view/main_nav_view.dart';
 import 'package:get/get.dart';
 
 import 'view/test_view.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      // home: const MainNavView(initialIndex: 0),
       home: const MainLogoAppView(),
       // home: const TestView(),
     );

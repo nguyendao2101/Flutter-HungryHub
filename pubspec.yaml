@@ -44,6 +44,7 @@ dependencies:
   firebase_database: ^11.1.4
   http: ^1.2.2
   cloud_firestore: ^5.5.0
+  flutter_svg: ^2.0.16
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +72,7 @@ flutter:
   assets:
     - assets/images/
     - assets/fonts/
+    - assets/vectors/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
