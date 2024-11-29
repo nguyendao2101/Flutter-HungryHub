@@ -1,9 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hungry_hub/widgets/common_widget/button/bassic_button.dart';
 import 'package:get/get.dart';
 import '../view_model/sign_up_view_model.dart';
+import '../widgets/common_widget/check_mail/check_mail.dart';
 import 'login_view.dart';
 
 class SignUpView extends StatefulWidget {
@@ -14,9 +13,11 @@ class SignUpView extends StatefulWidget {
 }
 
 class _SignUpViewState extends State<SignUpView> {
+  late String codeMail;
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(SignUpViewModel());
+    codeMail = controller.generateVerificationCode().toString();
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -86,50 +87,56 @@ class _SignUpViewState extends State<SignUpView> {
                     // }, title: 'SIGN IN', sizeTitle: 16, fontW: FontWeight.bold, height: 53, radius: 12,);
                     return ElevatedButton(
                       onPressed: () {
+                        // if (controller.isValidSignupForm()) {
+                        //   controller.isLoading.value = true;
+                        //   controller.signUp(
+                        //     controller.email ?? '',
+                        //     controller.password ?? '',
+                        //     controller.confirmPassword ?? '',
+                        //     controller.hoTen ?? '',
+                        //     controller.address ?? '',
+                        //     controller.sex ?? '',
+                        //     controller.numberPhone ?? '',
+                        //         () {
+                        //       controller.isLoading.value = false;
+                        //       Get.snackbar(
+                        //         'Success',
+                        //         'Đăng ký thành công',
+                        //         snackPosition: SnackPosition.TOP,
+                        //       );
+                        //       controller.resetForm();
+                        //       Get.offAll(() => const LoginView());
+                        //     },
+                        //         (error) {
+                        //       controller.isLoading.value = false;
+                        //       Get.snackbar(
+                        //         'Error',
+                        //         error,
+                        //         snackPosition: SnackPosition.BOTTOM,
+                        //       );
+                        //     },
+                        //   );
+                        // }
                         if (controller.isValidSignupForm()) {
-                          controller.isLoading.value = true;
-                          controller.signUp(
-                            controller.email ?? '',
-                            controller.password ?? '',
-                            controller.confirmPassword ?? '',
-                            controller.hoTen ?? '',
-                            controller.address ?? '',
-                            controller.sex ?? '',
-                            controller.numberPhone ?? '',
-                                () {
-                              controller.isLoading.value = false;
-                              Get.snackbar(
-                                'Success',
-                                'Đăng ký thành công',
-                                snackPosition: SnackPosition.TOP,
-                              );
-                              controller.resetForm();
-                              Get.offAll(() => const LoginView());
-                            },
-                                (error) {
-                              controller.isLoading.value = false;
-                              Get.snackbar(
-                                'Error',
-                                error,
-                                snackPosition: SnackPosition.BOTTOM,
-                              );
-                            },
-                          );
+                          controller.sendEmail(controller.email, codeMail.toString());
+                          print('test ma code1: $codeMail');
+                          Get.to(() => CheckMail(email: controller.email, password: controller.password, fullName: controller.hoTen, address: controller.address, sex: controller.sex, phoneNumber: controller.numberPhone,verificationCode: codeMail.toString(),));
                         }
+
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xffE53935),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 150),
+                        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 145),
                       ),
                       child: controller.isLoading.value
                           ? const CircularProgressIndicator(
                         color: Colors.white,
                       )
                           : const Text(
-                        'Sign Up',
+                        'Continue',
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -339,9 +346,5 @@ class _SignUpViewState extends State<SignUpView> {
         validator: validator,
       ),
     );
-  }
-  String generateVerificationCode() {
-    var random = Random();
-    return (random.nextInt(9000) + 1000).toString(); // Tạo số từ 1000 đến 9999
   }
 }

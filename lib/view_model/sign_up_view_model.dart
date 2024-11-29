@@ -1,26 +1,34 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
+import 'package:mailer/mailer.dart';
+import 'dart:math';
+
+import 'package:mailer/smtp_server/gmail.dart';
 
 class SignUpViewModel extends GetxController {
   final FirebaseAuth _firAuth = FirebaseAuth.instance;
   final DatabaseReference _dbRef = FirebaseDatabase.instance.ref();
   final formKey = GlobalKey<FormState>();
 
-  String? email;
-  String? password;
-  String? confirmPassword;
-  String? hoTen;
-  String? address;
-  String? sex;
-  String? numberPhone;
+  late String email;
+  late String password;
+  late String confirmPassword;
+  late String hoTen;
+  late String address;
+  late String sex;
+  late String numberPhone;
 
 
   RxBool isEntryPasswordObscured = true.obs;
   RxBool isObscured = true.obs;
   final showPassword = false.obs;
   final isLoading = false.obs;
+
+  //email
+  // final gmailSmtp = gmail(dotenv.env["GMAIL_MAIL"]!,dotenv.env["GMAIL_PASSWORD"]!);
 
   void toggleObscureText() {
     isObscured.value = !isObscured.value;
@@ -128,6 +136,29 @@ class SignUpViewModel extends GetxController {
       return null;
     }
   }
+  Future<void> sendEmail(String email, String code) async {
+    String username = 'hungryhubb1@gmail.com'; // Email gửi
+    String password = 'nrhc ernj lejs fpyi'; // Mật khẩu email gửi
+
+    final smtpServer = gmail(username, password); // Sử dụng Gmail
+
+    final message = Message()
+      ..from = Address(username, 'HungryHub')
+      ..recipients.add(email) // Email nhận
+      ..subject = 'Mã xác minh tài khoản'
+      ..text = 'Chào bạn!\nCảm ơn bạn đã quan tâm và đăng ký tài khoản HungryHub\nMã xác minh của bạn là: $code\nChúc bạn có những giây phút mua hàng vui vẻ!!\nĐừng quên đánh giá 5 sao cho sản phẩm nhé!!';
+
+    try {
+      await send(message, smtpServer);
+      print('Email gửi thành công');
+    } catch (e) {
+      print('Gửi email thất bại: $e');
+    }
+  }
+  String generateVerificationCode() {
+    var random = Random();
+    return (random.nextInt(9000) + 1000).toString(); // Tạo số từ 1000 đến 9999
+  }
 
   String? validatorPassword(String? value) {
     if ((value ?? '').isEmpty) {
@@ -170,13 +201,13 @@ class SignUpViewModel extends GetxController {
   }
 
   void resetForm() {
-    email = null;
-    password = null;
-    confirmPassword = null;
-    hoTen = null;
-    address = null;
-    sex = null;
-    numberPhone = null;
+    email = '';
+    password = '';
+    confirmPassword = '';
+    hoTen = '';
+    address = '';
+    sex = '';
+    numberPhone = '';
     formKey.currentState?.reset();
   }
 }

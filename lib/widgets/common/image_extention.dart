@@ -27,6 +27,8 @@ class ImageAsset{
   static String searchUn = '$baseImagesPathSVG/search_un$format';
   static String user = '$baseImagesPathSVG/user$format';
   static String userUn = '$baseImagesPathSVG/user_un$format';
+  static String arrowLeft = '$baseImagesPathSVG/arrowLeft$format';
+
 
 
 
