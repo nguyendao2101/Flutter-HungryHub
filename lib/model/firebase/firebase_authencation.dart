@@ -75,12 +75,17 @@ class FirAuth {
             .once();
 
         final userData = userSnapshot.snapshot.value as Map<dynamic, dynamic>?;
-
+        if (userData == null){
+          print("User signed is null");
+        }
         if (userData != null) {
+          print("User signed in: ${credential.user!.email}");
           final userRole = userData['role'];
+          print('form role1: $userRole');
           if (userRole == 'admin') {
             // Get.offAll(() => const HomeScreenAdmin());
           } else {
+            print('form role: $userRole');
             // Get.offAll(() => const MainScreenUserView(initialIndex: 0,));
             Get.offAll(() => const MainNavView());
           }

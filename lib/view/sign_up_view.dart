@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hungry_hub/widgets/common_widget/button/bassic_button.dart';
 import 'package:get/get.dart';
@@ -337,5 +339,9 @@ class _SignUpViewState extends State<SignUpView> {
         validator: validator,
       ),
     );
+  }
+  String generateVerificationCode() {
+    var random = Random();
+    return (random.nextInt(9000) + 1000).toString(); // Tạo số từ 1000 đến 9999
   }
 }
