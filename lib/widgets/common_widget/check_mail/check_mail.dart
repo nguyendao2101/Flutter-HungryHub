@@ -35,6 +35,7 @@ class CheckMail extends StatefulWidget {
 class _CheckMailState extends State<CheckMail> {
   final controller = Get.put(SignUpViewModel());
   late String codeMail;
+  late String verificationCode;
 
   late Timer _timer;
   int _remainingSeconds = 90; // Thời gian đếm ngược (90s)
@@ -43,6 +44,7 @@ class _CheckMailState extends State<CheckMail> {
   @override
   void initState() {
     super.initState();
+    verificationCode = widget.verificationCode!;
     startTimer();
   }
 
@@ -56,7 +58,7 @@ class _CheckMailState extends State<CheckMail> {
   }
 
   void startTimer() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_remainingSeconds > 0) {
         setState(() {
           _remainingSeconds--;
@@ -69,26 +71,37 @@ class _CheckMailState extends State<CheckMail> {
   void _resendCode() {
     // Hủy timer hiện tại nếu đang chạy
     _timer.cancel();
+
+    // Tạo mã xác minh mới
+    String newVerificationCode = controller.generateVerificationCode().toString();
+
     setState(() {
       _remainingSeconds = 90; // Reset thời gian đếm ngược
+      verificationCode = newVerificationCode; // Đặt lại giá trị mã xác minh
     });
+
     startTimer(); // Bắt đầu lại timer
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('Mã xác minh đã được gửi lại!'),
+
+    // Gửi lại email với mã mới
+    controller.sendEmail(widget.email, newVerificationCode);
+
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('A new verification code has been sent!'),
       backgroundColor: Colors.blue,
     ));
   }
+
 
 
   void _verifyCode() {
     String inputCode = _controllers.map((controller) => controller.text).join();
     if(_remainingSeconds<=0){
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Thời gian đã hết vui long lấy lại 4-Digit'),
+        content: Text('Time is up, please retrieve the 4-digit code again'),
         backgroundColor: Colors.red,
       ));
     }
-    else if (inputCode == widget.verificationCode) {
+    else if (inputCode == verificationCode) {
       controller.isLoading.value = true;
       controller.signUp(
         controller.email ?? '',
@@ -113,12 +126,12 @@ class _CheckMailState extends State<CheckMail> {
         },
       );
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Xác minh thành công!'),
+        content: Text('Verification successful!'),
         backgroundColor: Colors.green,
       ));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Mã xác minh không đúng.'),
+        content: Text('The verification code is incorrect'),
         backgroundColor: Colors.red,
       ));
     }
@@ -135,8 +148,7 @@ class _CheckMailState extends State<CheckMail> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 50),
-              Text(widget.verificationCode),
-              Text(
+              const Text(
                 'Verify \nyour email',
                 style: TextStyle(
                   fontSize: 24,
@@ -148,7 +160,7 @@ class _CheckMailState extends State<CheckMail> {
               const SizedBox(height: 30),
               Text(
                 'Enter the 4-Digit code sent to \nyou\non ${widget.email}',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
                   fontFamily: 'Poppins',
@@ -186,13 +198,13 @@ class _CheckMailState extends State<CheckMail> {
                 children: List.generate(4, (index) {
                   return Container(
                     width: 50,
-                    margin: EdgeInsets.symmetric(horizontal: 5),
+                    margin: const EdgeInsets.symmetric(horizontal: 5),
                     child: TextField(
                       controller: _controllers[index],
                       keyboardType: TextInputType.number,
                       textAlign: TextAlign.center,
                       maxLength: 1,
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                       decoration: InputDecoration(
                         counterText: '',
                         border: OutlineInputBorder(
@@ -227,7 +239,7 @@ class _CheckMailState extends State<CheckMail> {
                 ],
               ),
               const SizedBox(height: 30),
-              BasicAppButton(onPressed: _verifyCode, title: 'SIGN UP', sizeTitle: 16, fontW: FontWeight.bold, colorButton: Color(0xffE53935), radius: 12,height: 53,),
+              BasicAppButton(onPressed: _verifyCode, title: 'SIGN UP', sizeTitle: 16, fontW: FontWeight.bold, colorButton: const Color(0xffE53935), radius: 12,height: 53,),
               const SizedBox(height: 50),
               Align(
                 alignment: Alignment.center,

@@ -87,36 +87,6 @@ class _SignUpViewState extends State<SignUpView> {
                     // }, title: 'SIGN IN', sizeTitle: 16, fontW: FontWeight.bold, height: 53, radius: 12,);
                     return ElevatedButton(
                       onPressed: () {
-                        // if (controller.isValidSignupForm()) {
-                        //   controller.isLoading.value = true;
-                        //   controller.signUp(
-                        //     controller.email ?? '',
-                        //     controller.password ?? '',
-                        //     controller.confirmPassword ?? '',
-                        //     controller.hoTen ?? '',
-                        //     controller.address ?? '',
-                        //     controller.sex ?? '',
-                        //     controller.numberPhone ?? '',
-                        //         () {
-                        //       controller.isLoading.value = false;
-                        //       Get.snackbar(
-                        //         'Success',
-                        //         'Đăng ký thành công',
-                        //         snackPosition: SnackPosition.TOP,
-                        //       );
-                        //       controller.resetForm();
-                        //       Get.offAll(() => const LoginView());
-                        //     },
-                        //         (error) {
-                        //       controller.isLoading.value = false;
-                        //       Get.snackbar(
-                        //         'Error',
-                        //         error,
-                        //         snackPosition: SnackPosition.BOTTOM,
-                        //       );
-                        //     },
-                        //   );
-                        // }
                         if (controller.isValidSignupForm()) {
                           controller.sendEmail(controller.email, codeMail.toString());
                           print('test ma code1: $codeMail');

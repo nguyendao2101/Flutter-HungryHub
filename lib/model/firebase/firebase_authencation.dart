@@ -7,6 +7,7 @@ import 'package:flutter_hungry_hub/view/main_nav_view.dart';
 import 'package:get/get.dart';
 
 import '../../view/login_view.dart';
+import '../../widgets/common_widget/google_map/access_location.dart';
 
 class FirAuth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -86,8 +87,8 @@ class FirAuth {
             // Get.offAll(() => const HomeScreenAdmin());
           } else {
             print('form role: $userRole');
-            // Get.offAll(() => const MainScreenUserView(initialIndex: 0,));
-            Get.offAll(() => const MainNavView(initialIndex: 0,));
+            Get.offAll(() => const AccessLocation());
+            // Get.offAll(() => const MainNavView(initialIndex: 0,));
           }
         } else {
           print('Không tìm thấy dữ liệu người dùng.');

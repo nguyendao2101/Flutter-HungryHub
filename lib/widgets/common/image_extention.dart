@@ -17,6 +17,11 @@ class ImageAsset{
   //sign up
   static String facebook = '$baseImagePathPNG/facebook.png';
   static String google = '$baseImagePathPNG/google.png';
+  //map
+  static String map = '$baseImagePathPNG/map.png';
+  static String marker = '$baseImagePathPNG/marker.png';
+
+
 
   // SVG
   static String home = '$baseImagesPathSVG/home$format';
@@ -28,6 +33,8 @@ class ImageAsset{
   static String user = '$baseImagesPathSVG/user$format';
   static String userUn = '$baseImagesPathSVG/user_un$format';
   static String arrowLeft = '$baseImagesPathSVG/arrowLeft$format';
+  static String mapLocationWhite = '$baseImagesPathSVG/map_location_white$format';
+
 
 
 

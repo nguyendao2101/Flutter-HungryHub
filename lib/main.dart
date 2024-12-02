@@ -4,6 +4,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_hungry_hub/firebase_options.dart';
 import 'package:flutter_hungry_hub/view/main_logo_app_view.dart';
 import 'package:flutter_hungry_hub/view/main_nav_view.dart';
+import 'package:flutter_hungry_hub/widgets/common_widget/google_map/MapScreen.dart';
+import 'package:flutter_hungry_hub/widgets/common_widget/google_map/access_location.dart';
 import 'package:get/get.dart';
 
 import 'view/test_view.dart';
@@ -29,7 +31,8 @@ class MyApp extends StatelessWidget {
       ),
       // home: const MainNavView(initialIndex: 0),
       home: const MainLogoAppView(),
-      // home: const TestView(),
+      // home: const AccessLocation(),
+      // home:  RouteScreen(),
     );
   }
 }
