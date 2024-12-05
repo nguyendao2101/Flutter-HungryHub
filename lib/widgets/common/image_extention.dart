@@ -20,6 +20,15 @@ class ImageAsset{
   //map
   static String map = '$baseImagePathPNG/map.png';
   static String marker = '$baseImagePathPNG/marker.png';
+  //HOME
+  static String users = '$baseImagePathPNG/users.png';
+  static String searchHome = '$baseImagePathPNG/searchHome.png';
+  static String microphone = '$baseImagePathPNG/microphone.png';
+  static String microphoneUn = '$baseImagePathPNG/microphoneUn.png';
+
+
+
+
 
 
 
@@ -34,6 +43,10 @@ class ImageAsset{
   static String userUn = '$baseImagesPathSVG/user_un$format';
   static String arrowLeft = '$baseImagesPathSVG/arrowLeft$format';
   static String mapLocationWhite = '$baseImagesPathSVG/map_location_white$format';
+  static String locationRed = '$baseImagesPathSVG/location_red$format';
+  // static String searchHome = '$baseImagesPathSVG/search_home$format';
+
+
 
 
 

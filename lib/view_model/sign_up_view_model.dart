@@ -157,7 +157,7 @@ class SignUpViewModel extends GetxController {
   }
   String generateVerificationCode() {
     var random = Random();
-    return (random.nextInt(9000) + 1000).toString(); // Tạo số từ 1000 đến 9999
+    return (random.nextInt(900000) + 100000).toString(); // Tạo số từ 100000 đến 999999
   }
 
   String? validatorPassword(String? value) {

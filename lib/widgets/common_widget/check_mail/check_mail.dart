@@ -39,7 +39,7 @@ class _CheckMailState extends State<CheckMail> {
 
   late Timer _timer;
   int _remainingSeconds = 90; // Thời gian đếm ngược (90s)
-  final List<TextEditingController> _controllers = List.generate(4, (_) => TextEditingController());
+  final List<TextEditingController> _controllers = List.generate(6, (_) => TextEditingController());
 
   @override
   void initState() {
@@ -97,7 +97,7 @@ class _CheckMailState extends State<CheckMail> {
     String inputCode = _controllers.map((controller) => controller.text).join();
     if(_remainingSeconds<=0){
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Time is up, please retrieve the 4-digit code again'),
+        content: Text('Time is up, please retrieve the 6-digit code again'),
         backgroundColor: Colors.red,
       ));
     }
@@ -159,7 +159,7 @@ class _CheckMailState extends State<CheckMail> {
               ),
               const SizedBox(height: 30),
               Text(
-                'Enter the 4-Digit code sent to \nyou\non ${widget.email}',
+                'Enter the 6-Digit code sent to \nyou\non ${widget.email}',
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
@@ -195,7 +195,7 @@ class _CheckMailState extends State<CheckMail> {
               const SizedBox(height: 50),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(4, (index) {
+                children: List.generate(6, (index) {
                   return Container(
                     width: 50,
                     margin: const EdgeInsets.symmetric(horizontal: 5),
@@ -212,7 +212,7 @@ class _CheckMailState extends State<CheckMail> {
                         ),
                       ),
                       onChanged: (value) {
-                        if (value.length == 1 && index < 3) {
+                        if (value.length == 1 && index < 5) {
                           FocusScope.of(context).nextFocus();
                         } else if (value.isEmpty && index > 0) {
                           FocusScope.of(context).previousFocus();
