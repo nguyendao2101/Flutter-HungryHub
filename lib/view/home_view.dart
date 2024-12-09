@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hungry_hub/view_model/home_view_model.dart';
+import 'package:flutter_hungry_hub/view_model/test_view_model.dart';
 import 'package:flutter_hungry_hub/widgets/common/image_extention.dart';
 import 'package:flutter_hungry_hub/widgets/common_widget/text/title_see_more.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import '../widgets/common_widget/card/product.dart';
 import '../widgets/common_widget/inwell/home_in_well.dart';
+import '../widgets/common_widget/text/truncated_text.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -14,9 +17,34 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  final controller = Get.put(HomeViewModel());
+  final controllerTestView = Get.put(TestViewModel());
+
+  List<Map<String, dynamic>> _products = [];
+  List<Map<String, dynamic>> _stores = [];
+  String? _selectedProductId;
+  String? _selectedStoreId;
+  bool _isLoadingProducts = true;
+  bool _isLoadingStores = false;
+  bool _isPlacingOrder = false;
+
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProducts();
+    // _loadStores();
+  }
+
+  Future<void> _loadProducts() async {
+    await controllerTestView.fetchProducts();
+    setState(() {
+      _products = controllerTestView.products;
+      _isLoadingProducts = false;
+    });
+  }
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(HomeViewModel());
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -28,7 +56,7 @@ class _HomeViewState extends State<HomeView> {
               Row(
                 children: [
                   SvgPicture.asset(ImageAsset.locationRed),
-                  const SizedBox(width: 20),
+                  const SizedBox(width: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -83,7 +111,7 @@ class _HomeViewState extends State<HomeView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 50),
+              const SizedBox(height: 30),
               RichText(
                 text: TextSpan(
                   style: const TextStyle(
@@ -156,12 +184,12 @@ class _HomeViewState extends State<HomeView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const SizedBox(width: 10,),
+                  const SizedBox(width: 4,),
                   HomeInWell(image: ImageAsset.chicken, text: 'Chicken',),
                   HomeInWell(image: ImageAsset.burger, text: 'Burger',),
                   HomeInWell(image: ImageAsset.snack, text: 'Snacks',),
                   HomeInWell(image: ImageAsset.rice, text: 'Rice',),
-                  const SizedBox(width: 10,),
+                  const SizedBox(width: 4,),
                 ],
               ),
               const SizedBox(height: 20,),
@@ -180,12 +208,128 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 ),
               ),
-              const TitleSeeMore(title: 'Combo'),
-              const TitleSeeMore(title: 'Chicken'),
-              const TitleSeeMore(title: 'Burger - Rice - Spaghetti'),
-              const TitleSeeMore(title: 'Snacks'),
-              const TitleSeeMore(title: 'Drinks And Desserts'),
+              InkWell(
+                onTap: (){
 
+                },
+                  child: const TitleSeeMore(title: 'Combo')),
+              SizedBox(
+                height: 285, // Chiều cao cố định cho danh sách ngang
+                child: _isLoadingProducts
+                    ? Center(child: CircularProgressIndicator())
+                    : ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _products.length,
+                  itemBuilder: (context, index) {
+                    final product = _products[index];
+                    if (product['Category'] == 'Combo 1 Người' || product['Category'] == 'Combo Nhóm') {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: ProductCard(product: product),
+                      );
+                    }
+                    return SizedBox.shrink(); // Ẩn các sản phẩm không phù hợp
+                  },
+                ),
+              ),
+
+              InkWell(
+                  onTap: (){
+
+                  },
+                  child: const TitleSeeMore(title: 'Chicken')),
+              SizedBox(
+                height: 285, // Chiều cao cố định cho danh sách ngang
+                child: _isLoadingProducts
+                    ? Center(child: CircularProgressIndicator())
+                    : ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _products.length,
+                  itemBuilder: (context, index) {
+                    final product = _products[index];
+                    if (product['Category'] == 'Gà Rán - Gà Quay') {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: ProductCard(product: product),
+                      );
+                    }
+                    return SizedBox.shrink(); // Ẩn các sản phẩm không phù hợp
+                  },
+                ),
+              ),
+              InkWell(
+                  onTap: (){
+
+                  },
+                  child: const TitleSeeMore(title: 'Burger - Rice - Spaghetti')),
+              SizedBox(
+                height: 285, // Chiều cao cố định cho danh sách ngang
+                child: _isLoadingProducts
+                    ? Center(child: CircularProgressIndicator())
+                    : ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _products.length,
+                  itemBuilder: (context, index) {
+                    final product = _products[index];
+                    if (product['Category'] == 'Burger - Cơm - Mì Ý') {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: ProductCard(product: product),
+                      );
+                    }
+                    return SizedBox.shrink(); // Ẩn các sản phẩm không phù hợp
+                  },
+                ),
+              ),
+              InkWell(
+                  onTap: (){
+
+                  },
+                  child: const TitleSeeMore(title: 'Snacks')),
+              SizedBox(
+                height: 285, // Chiều cao cố định cho danh sách ngang
+                child: _isLoadingProducts
+                    ? Center(child: CircularProgressIndicator())
+                    : ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _products.length,
+                  itemBuilder: (context, index) {
+                    final product = _products[index];
+                    if (product['Category'] == 'Thức ăn nhẹ') {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: ProductCard(product: product),
+                      );
+                    }
+                    return SizedBox.shrink(); // Ẩn các sản phẩm không phù hợp
+                  },
+                ),
+              ),
+              InkWell(
+                  onTap: (){
+
+                  }
+                  ,child: const TitleSeeMore(title: 'Drinks And Desserts')),
+              SizedBox(
+                height: 285, // Chiều cao cố định cho danh sách ngang
+                child: _isLoadingProducts
+                    ? Center(child: CircularProgressIndicator())
+                    : ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _products.length,
+                  itemBuilder: (context, index) {
+                    final product = _products[index];
+                    if (product['Category'] == 'Thức uống & tráng miệng') {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: ProductCard(product: product),
+                      );
+                    }
+                    return SizedBox.shrink(); // Ẩn các sản phẩm không phù hợp
+                  },
+                ),
+              ),
+              const SizedBox(height: 20),
             ],
           ),
         ),
