@@ -25,10 +25,13 @@ class ImageAsset{
   static String searchHome = '$baseImagePathPNG/searchHome.png';
   static String microphone = '$baseImagePathPNG/microphone.png';
   static String microphoneUn = '$baseImagePathPNG/microphoneUn.png';
-
-
-
-
+  static String chicken = '$baseImagePathPNG/chicken.png';
+  static String burger = '$baseImagePathPNG/burger.png';
+  static String rice = '$baseImagePathPNG/rice.png';
+  static String snack = '$baseImagePathPNG/snacks.png';
+  static String menu = '$baseImagePathPNG/menu.png';
+  static String menuUnn = '$baseImagePathPNG/menuUnn.png';
+  static String homeChicken = '$baseImagePathPNG/homeChicken.png';
 
 
 

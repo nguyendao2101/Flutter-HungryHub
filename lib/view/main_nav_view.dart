@@ -49,7 +49,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
       return Stack(
         children: [
           Container(
-            height: 78,
+            height: 80,
             decoration: const BoxDecoration(
               color: Colors.white,
               boxShadow: [
@@ -83,11 +83,11 @@ class CustomBottomNavigationBar extends StatelessWidget {
                         ? ImageAsset.home
                         : ImageAsset.homeUn,
                   ),
-                  _buildTab(
-                    "Search",
+                  _buildTabPNG(
+                    "Menu",
                     controller.selectedTab.value == 1
-                        ? ImageAsset.searchUn
-                        : ImageAsset.search,
+                        ? ImageAsset.menu
+                        : ImageAsset.menuUnn,
                   ),
                   _buildTab(
                     "Order",
@@ -126,6 +126,16 @@ class CustomBottomNavigationBar extends StatelessWidget {
         iconPath,
         width: 24,
         height: 24,
+      ),
+    );
+  }
+  Tab _buildTabPNG(String label, String iconPath) {
+    return Tab(
+      text: label,
+      icon: Image.asset(
+        iconPath,
+        width: 30,
+        height: 30,
       ),
     );
   }

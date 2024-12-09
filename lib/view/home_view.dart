@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hungry_hub/view_model/home_view_model.dart';
 import 'package:flutter_hungry_hub/widgets/common/image_extention.dart';
+import 'package:flutter_hungry_hub/widgets/common_widget/text/title_see_more.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:speech_to_text/speech_to_text.dart' as stt;
+import '../widgets/common_widget/inwell/home_in_well.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -31,9 +32,9 @@ class _HomeViewState extends State<HomeView> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'DELIVER TO',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
                           color: Color(0xffF44336),
                           fontWeight: FontWeight.w400,
@@ -106,27 +107,6 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ),
               const SizedBox(height: 20),
-              // Form Search
-              // TextField(
-              //   controller: controller.searchController,
-              //   decoration: InputDecoration(
-              //     hintText: 'Search...',
-              //     hintStyle: const TextStyle(color: Colors.grey),
-              //     prefixIcon: SvgPicture.asset(ImageAsset.searchHome, height: 12, width: 12,),
-              //     filled: true,
-              //     fillColor: const Color(0xffB2EBF2),
-              //     contentPadding: const EdgeInsets.symmetric(
-              //         vertical: 15, horizontal: 40),
-              //     border: OutlineInputBorder(
-              //       borderRadius: BorderRadius.circular(15),
-              //       borderSide: BorderSide.none,
-              //     ),
-              //   ),
-              //   onChanged: (value) {
-              //     // Xử lý logic tìm kiếm
-              //     debugPrint('Từ khóa tìm kiếm: $value');
-              //   },
-              // ),
               Container(
                 width: double.infinity, // Chiều rộng cụ thể
                 height: 52, // Chiều cao cụ thể
@@ -171,6 +151,40 @@ class _HomeViewState extends State<HomeView> {
                   },
                 ),
               ),
+
+              const SizedBox(height: 20,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const SizedBox(width: 10,),
+                  HomeInWell(image: ImageAsset.chicken, text: 'Chicken',),
+                  HomeInWell(image: ImageAsset.burger, text: 'Burger',),
+                  HomeInWell(image: ImageAsset.snack, text: 'Snacks',),
+                  HomeInWell(image: ImageAsset.rice, text: 'Rice',),
+                  const SizedBox(width: 10,),
+                ],
+              ),
+              const SizedBox(height: 20,),
+              Container(
+                height: 211,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20), // Chỉnh góc bo tròn
+                  border: Border.all(color: Colors.white, width: 2), // Đường viền của container
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20), // Đảm bảo ảnh cũng có góc bo tròn như container
+                  child: Image.asset(
+                    ImageAsset.homeChicken,
+                    fit: BoxFit.cover, // Làm ảnh fill toàn bộ container
+                  ),
+                ),
+              ),
+              const TitleSeeMore(title: 'Combo'),
+              const TitleSeeMore(title: 'Chicken'),
+              const TitleSeeMore(title: 'Burger - Rice - Spaghetti'),
+              const TitleSeeMore(title: 'Snacks'),
+              const TitleSeeMore(title: 'Drinks And Desserts'),
 
             ],
           ),
