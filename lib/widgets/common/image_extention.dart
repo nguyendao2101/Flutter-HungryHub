@@ -33,6 +33,7 @@ class ImageAsset{
   static String menuUnn = '$baseImagePathPNG/menuUnn.png';
   static String homeChicken = '$baseImagePathPNG/homeChicken.png';
   static String starRating = '$baseImagePathPNG/star_rating.png';
+  static String star = '$baseImagePathPNG/star.png';
 
 
 
@@ -49,6 +50,9 @@ class ImageAsset{
   static String arrowLeft = '$baseImagesPathSVG/arrowLeft$format';
   static String mapLocationWhite = '$baseImagesPathSVG/map_location_white$format';
   static String locationRed = '$baseImagesPathSVG/location_red$format';
+  static String backButton = '$baseImagesPathSVG/back_button$format';
+  static String more = '$baseImagesPathSVG/more$format';
+
   // static String searchHome = '$baseImagesPathSVG/search_home$format';
 
 

@@ -144,12 +144,12 @@ class _HomeViewState extends State<HomeView> {
                     hintText: 'Search dishes, restaurants',
                     hintStyle: const TextStyle(color: Color(0xff32343E), fontFamily: 'Poppins', fontWeight: FontWeight.w400, fontSize: 14),
                     prefixIcon: SizedBox(
-                    height: 16, // Chiều cao mới
-                    width: 16,  // Chiều rộng mới
-                    child: Image.asset(
-                      ImageAsset.searchHome,
+                      height: 16, // Chiều cao mới
+                      width: 16,  // Chiều rộng mới
+                      child: Image.asset(
+                        ImageAsset.searchHome,
+                      ),
                     ),
-                  ),
                     suffixIcon: IconButton(
                       icon: Image.asset(
                         controller.isListening
@@ -209,9 +209,9 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ),
               InkWell(
-                onTap: (){
+                  onTap: (){
 
-                },
+                  },
                   child: const TitleSeeMore(title: 'Combo')),
               SizedBox(
                 height: 285, // Chiều cao cố định cho danh sách ngang
