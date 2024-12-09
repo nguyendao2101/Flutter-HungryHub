@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hungry_hub/view_model/home_view_model.dart';
 import 'package:flutter_hungry_hub/view_model/test_view_model.dart';
 import 'package:flutter_hungry_hub/widgets/common/image_extention.dart';
+import 'package:flutter_hungry_hub/widgets/common_widget/food_view/burger_view.dart';
+import 'package:flutter_hungry_hub/widgets/common_widget/food_view/chicken_view.dart';
+import 'package:flutter_hungry_hub/widgets/common_widget/food_view/combo_view.dart';
+import 'package:flutter_hungry_hub/widgets/common_widget/food_view/snacks_view.dart';
 import 'package:flutter_hungry_hub/widgets/common_widget/text/title_see_more.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -135,7 +139,7 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ),
               const SizedBox(height: 20),
-              Container(
+              SizedBox(
                 width: double.infinity, // Chiều rộng cụ thể
                 height: 52, // Chiều cao cụ thể
                 child: TextField(
@@ -185,10 +189,46 @@ class _HomeViewState extends State<HomeView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const SizedBox(width: 4,),
-                  HomeInWell(image: ImageAsset.chicken, text: 'Chicken',),
-                  HomeInWell(image: ImageAsset.burger, text: 'Burger',),
-                  HomeInWell(image: ImageAsset.snack, text: 'Snacks',),
-                  HomeInWell(image: ImageAsset.rice, text: 'Rice',),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ComboView(listDS: controllerTestView.products,),
+                        ),
+                      );
+                    },
+                      child: HomeInWell(image: ImageAsset.combo, text: 'Combo',)),
+                  GestureDetector(
+                      onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChickenView(),
+                          ),
+                        );
+                      },
+                      child: HomeInWell(image: ImageAsset.chicken, text: 'Chicken',)),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BurgerView(listDS: controllerTestView.products,),
+                        ),
+                      );
+                    },
+                      child: HomeInWell(image: ImageAsset.burger, text: 'Burger',)),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SnacksView(),
+                        ),
+                      );
+                    },
+                      child: HomeInWell(image: ImageAsset.snack, text: 'Snacks',)),
                   const SizedBox(width: 4,),
                 ],
               ),
@@ -210,13 +250,18 @@ class _HomeViewState extends State<HomeView> {
               ),
               InkWell(
                   onTap: (){
-
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ComboView(listDS: controllerTestView.products,),
+                      ),
+                    );
                   },
                   child: const TitleSeeMore(title: 'Combo')),
               SizedBox(
                 height: 285, // Chiều cao cố định cho danh sách ngang
                 child: _isLoadingProducts
-                    ? Center(child: CircularProgressIndicator())
+                    ? const Center(child: CircularProgressIndicator())
                     : ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: _products.length,
@@ -228,7 +273,7 @@ class _HomeViewState extends State<HomeView> {
                         child: ProductCard(product: product),
                       );
                     }
-                    return SizedBox.shrink(); // Ẩn các sản phẩm không phù hợp
+                    return const SizedBox.shrink(); // Ẩn các sản phẩm không phù hợp
                   },
                 ),
               ),
@@ -241,7 +286,7 @@ class _HomeViewState extends State<HomeView> {
               SizedBox(
                 height: 285, // Chiều cao cố định cho danh sách ngang
                 child: _isLoadingProducts
-                    ? Center(child: CircularProgressIndicator())
+                    ? const Center(child: CircularProgressIndicator())
                     : ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: _products.length,
@@ -253,7 +298,7 @@ class _HomeViewState extends State<HomeView> {
                         child: ProductCard(product: product),
                       );
                     }
-                    return SizedBox.shrink(); // Ẩn các sản phẩm không phù hợp
+                    return const SizedBox.shrink(); // Ẩn các sản phẩm không phù hợp
                   },
                 ),
               ),
@@ -265,7 +310,7 @@ class _HomeViewState extends State<HomeView> {
               SizedBox(
                 height: 285, // Chiều cao cố định cho danh sách ngang
                 child: _isLoadingProducts
-                    ? Center(child: CircularProgressIndicator())
+                    ? const Center(child: CircularProgressIndicator())
                     : ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: _products.length,
@@ -277,7 +322,7 @@ class _HomeViewState extends State<HomeView> {
                         child: ProductCard(product: product),
                       );
                     }
-                    return SizedBox.shrink(); // Ẩn các sản phẩm không phù hợp
+                    return const SizedBox.shrink(); // Ẩn các sản phẩm không phù hợp
                   },
                 ),
               ),
@@ -289,7 +334,7 @@ class _HomeViewState extends State<HomeView> {
               SizedBox(
                 height: 285, // Chiều cao cố định cho danh sách ngang
                 child: _isLoadingProducts
-                    ? Center(child: CircularProgressIndicator())
+                    ? const Center(child: CircularProgressIndicator())
                     : ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: _products.length,
@@ -301,7 +346,7 @@ class _HomeViewState extends State<HomeView> {
                         child: ProductCard(product: product),
                       );
                     }
-                    return SizedBox.shrink(); // Ẩn các sản phẩm không phù hợp
+                    return const SizedBox.shrink(); // Ẩn các sản phẩm không phù hợp
                   },
                 ),
               ),
@@ -313,7 +358,7 @@ class _HomeViewState extends State<HomeView> {
               SizedBox(
                 height: 285, // Chiều cao cố định cho danh sách ngang
                 child: _isLoadingProducts
-                    ? Center(child: CircularProgressIndicator())
+                    ? const Center(child: CircularProgressIndicator())
                     : ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: _products.length,
@@ -325,7 +370,7 @@ class _HomeViewState extends State<HomeView> {
                         child: ProductCard(product: product),
                       );
                     }
-                    return SizedBox.shrink(); // Ẩn các sản phẩm không phù hợp
+                    return const SizedBox.shrink(); // Ẩn các sản phẩm không phù hợp
                   },
                 ),
               ),

@@ -27,7 +27,7 @@ class ImageAsset{
   static String microphoneUn = '$baseImagePathPNG/microphoneUn.png';
   static String chicken = '$baseImagePathPNG/chicken.png';
   static String burger = '$baseImagePathPNG/burger.png';
-  static String rice = '$baseImagePathPNG/rice.png';
+  static String combo = '$baseImagePathPNG/combo.png';
   static String snack = '$baseImagePathPNG/snacks.png';
   static String menu = '$baseImagePathPNG/menu.png';
   static String menuUnn = '$baseImagePathPNG/menuUnn.png';
