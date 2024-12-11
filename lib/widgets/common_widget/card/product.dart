@@ -1,3 +1,5 @@
+// ignore_for_file: use_super_parameters
+
 import 'package:flutter/material.dart';
 import '../../common/image_extention.dart';
 import '../food_detail/food_detail.dart';
@@ -11,11 +13,13 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => FoodDetail(productDetail: product,),
+            builder: (context) => FoodDetail(
+              productDetail: product,
+            ),
           ),
         );
       },

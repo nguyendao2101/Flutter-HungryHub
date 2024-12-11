@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hungry_hub/view/load_image_panner_view.dart';
 import 'package:get/get.dart';

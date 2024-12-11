@@ -1,14 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_hungry_hub/firebase_options.dart';
 import 'package:flutter_hungry_hub/view/main_logo_app_view.dart';
-import 'package:flutter_hungry_hub/view/main_nav_view.dart';
-import 'package:flutter_hungry_hub/widgets/common_widget/google_map/MapScreen.dart';
-import 'package:flutter_hungry_hub/widgets/common_widget/google_map/access_location.dart';
 import 'package:get/get.dart';
-
-import 'view/test_view.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +14,7 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
+  // ignore: use_super_parameters
   const MyApp({Key? key}) : super(key: key);
 
   @override

@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 
 import 'package:flutter/gestures.dart';
@@ -39,12 +41,13 @@ class _CheckMailState extends State<CheckMail> {
 
   late Timer _timer;
   int _remainingSeconds = 90; // Thời gian đếm ngược (90s)
-  final List<TextEditingController> _controllers = List.generate(6, (_) => TextEditingController());
+  final List<TextEditingController> _controllers =
+      List.generate(6, (_) => TextEditingController());
 
   @override
   void initState() {
     super.initState();
-    verificationCode = widget.verificationCode!;
+    verificationCode = widget.verificationCode;
     startTimer();
   }
 
@@ -68,12 +71,14 @@ class _CheckMailState extends State<CheckMail> {
       }
     });
   }
+
   void _resendCode() {
     // Hủy timer hiện tại nếu đang chạy
     _timer.cancel();
 
     // Tạo mã xác minh mới
-    String newVerificationCode = controller.generateVerificationCode().toString();
+    String newVerificationCode =
+        controller.generateVerificationCode().toString();
 
     setState(() {
       _remainingSeconds = 90; // Reset thời gian đếm ngược
@@ -91,32 +96,29 @@ class _CheckMailState extends State<CheckMail> {
     ));
   }
 
-
-
   void _verifyCode() {
     String inputCode = _controllers.map((controller) => controller.text).join();
-    if(_remainingSeconds<=0){
+    if (_remainingSeconds <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Time is up, please retrieve the 6-digit code again'),
         backgroundColor: Colors.red,
       ));
-    }
-    else if (inputCode == verificationCode) {
+    } else if (inputCode == verificationCode) {
       controller.isLoading.value = true;
       controller.signUp(
-        controller.email ?? '',
-        controller.password ?? '',
-        controller.confirmPassword ?? '',
-        controller.hoTen ?? '',
-        controller.address ?? '',
-        controller.sex ?? '',
-        controller.numberPhone ?? '',
-            () {
+        controller.email,
+        controller.password,
+        controller.confirmPassword,
+        controller.hoTen,
+        controller.address,
+        controller.sex,
+        controller.numberPhone,
+        () {
           controller.isLoading.value = false;
           controller.resetForm();
           Get.offAll(() => const LoginView());
         },
-            (error) {
+        (error) {
           controller.isLoading.value = false;
           Get.snackbar(
             'Error',
@@ -184,14 +186,14 @@ class _CheckMailState extends State<CheckMail> {
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
                           _resendCode(); // Gọi lại mã xác minh
-                          controller.sendEmail(controller.email, codeMail.toString()); // Gửi lại email
+                          controller.sendEmail(controller.email,
+                              codeMail.toString()); // Gửi lại email
                           print('code 2: $codeMail');
                         },
                     ),
                   ],
                 ),
               ),
-
               const SizedBox(height: 50),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -204,7 +206,8 @@ class _CheckMailState extends State<CheckMail> {
                       keyboardType: TextInputType.number,
                       textAlign: TextAlign.center,
                       maxLength: 1,
-                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.bold),
                       decoration: InputDecoration(
                         counterText: '',
                         border: OutlineInputBorder(
@@ -222,7 +225,6 @@ class _CheckMailState extends State<CheckMail> {
                   );
                 }),
               ),
-
               const SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -239,7 +241,15 @@ class _CheckMailState extends State<CheckMail> {
                 ],
               ),
               const SizedBox(height: 30),
-              BasicAppButton(onPressed: _verifyCode, title: 'SIGN UP', sizeTitle: 16, fontW: FontWeight.bold, colorButton: const Color(0xffE53935), radius: 12,height: 53,),
+              BasicAppButton(
+                onPressed: _verifyCode,
+                title: 'SIGN UP',
+                sizeTitle: 16,
+                fontW: FontWeight.bold,
+                colorButton: const Color(0xffE53935),
+                radius: 12,
+                height: 53,
+              ),
               const SizedBox(height: 50),
               Align(
                 alignment: Alignment.center,

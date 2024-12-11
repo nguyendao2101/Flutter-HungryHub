@@ -1,10 +1,12 @@
+// ignore_for_file: avoid_print
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
-class HomeViewModel extends GetxController{
+class HomeViewModel extends GetxController {
   late TextEditingController searchController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
@@ -40,6 +42,7 @@ class HomeViewModel extends GetxController{
       _userData.value = {};
     }
   }
+
   void initializeSpeechToText() async {
     _speech = stt.SpeechToText();
     bool available = await _speech.initialize();

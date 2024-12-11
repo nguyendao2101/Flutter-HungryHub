@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, avoid_function_literals_in_foreach_calls
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
@@ -78,7 +80,6 @@ class TestViewModel extends GetxController {
   }
 
   // Hàm thêm đơn hàng mới cho một cửa hàng
-
 
   Future<void> addOrder(String storeId, String userId, List<String> productIds,
       List<int> quantities) async {

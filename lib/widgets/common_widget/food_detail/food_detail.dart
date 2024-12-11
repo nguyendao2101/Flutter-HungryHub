@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors_in_immutables, unused_element
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hungry_hub/widgets/common/image_extention.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,24 +17,29 @@ class FoodDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+          automaticallyImplyLeading: false,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   Navigator.pop(context);
                 },
                 child: Container(
-                  height: 36,
+                    height: 36,
                     width: 36,
                     decoration: const BoxDecoration(
-                      shape: BoxShape.circle,  // Đặt hình dạng của container là hình tròn
+                      shape: BoxShape
+                          .circle, // Đặt hình dạng của container là hình tròn
                       color: Color(0xffD9D9D9),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: SvgPicture.asset(ImageAsset.backButton, height: 5, width: 6,),
+                      child: SvgPicture.asset(
+                        ImageAsset.backButton,
+                        height: 5,
+                        width: 6,
+                      ),
                     )),
               ),
               SizedBox(
@@ -54,9 +61,7 @@ class FoodDetail extends StatelessWidget {
                         value: 1,
                         height: 30,
                         child: InkWell(
-                          onTap: (){
-
-                          },
+                          onTap: () {},
                           child: const Text(
                             "Report",
                             style: TextStyle(
@@ -68,12 +73,10 @@ class FoodDetail extends StatelessWidget {
                           ),
                         ),
                       ),
-
                     ];
                   },
                 ),
               )
-
             ],
           )),
       body: SingleChildScrollView(
@@ -88,11 +91,15 @@ class FoodDetail extends StatelessWidget {
                   height: 211,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20), // Chỉnh góc bo tròn
-                    border: Border.all(color: Colors.white, width: 2), // Đường viền của container
+                    borderRadius:
+                        BorderRadius.circular(20), // Chỉnh góc bo tròn
+                    border: Border.all(
+                        color: Colors.white,
+                        width: 2), // Đường viền của container
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20), // Đảm bảo ảnh cũng có góc bo tròn như container
+                    borderRadius: BorderRadius.circular(
+                        20), // Đảm bảo ảnh cũng có góc bo tròn như container
                     child: Image.network(
                       productDetail['ImageUrl'],
                       fit: BoxFit.fill, // Làm ảnh fill toàn bộ container
@@ -100,13 +107,18 @@ class FoodDetail extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 10,),
-              Text('${productDetail['Price']} VNĐ', style: const TextStyle(
-                fontSize: 20,
-                color: Color(0xffA02334),
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Poppins',
-              ),),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                '${productDetail['Price']} VNĐ',
+                style: const TextStyle(
+                  fontSize: 20,
+                  color: Color(0xffA02334),
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Poppins',
+                ),
+              ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -134,23 +146,35 @@ class FoodDetail extends StatelessWidget {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                child: BasicAppButton(onPressed: () {  }, title: 'ADD', sizeTitle: 14, colorButton: Color(0xffFF7622), radius: 12, fontW: FontWeight.bold,height: 62,),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                child: BasicAppButton(
+                  onPressed: () {},
+                  title: 'ADD',
+                  sizeTitle: 14,
+                  colorButton: const Color(0xffFF7622),
+                  radius: 12,
+                  fontW: FontWeight.bold,
+                  height: 62,
+                ),
               ),
-              TitleSeeMore(title: 'Product Review',),
+              const TitleSeeMore(
+                title: 'Product Review',
+              ),
             ],
           ),
         ),
       ),
     );
   }
-  Widget _popupMenuItem(String text){
+
+  Widget _popupMenuItem(String text) {
     return PopupMenuItem(
       value: 1,
       height: 30,
       child: Text(
         text,
-        style: TextStyle(fontSize: 12),
+        style: const TextStyle(fontSize: 12),
       ),
     );
   }

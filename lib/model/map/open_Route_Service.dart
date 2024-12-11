@@ -1,9 +1,13 @@
+// ignore_for_file: file_names
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class OpenRouteService {
-  final String apiKey = '5b3ce3597851110001cf6248b33d75a4401a4482b62888d38a524ea4'; // Thay bằng API Key của bạn
-  final String baseUrl = 'https://api.openrouteservice.org/v2/directions/driving-car';
+  final String apiKey =
+      '5b3ce3597851110001cf6248b33d75a4401a4482b62888d38a524ea4'; // Thay bằng API Key của bạn
+  final String baseUrl =
+      'https://api.openrouteservice.org/v2/directions/driving-car';
 
   Future<Map<String, dynamic>> getRoute(
       double startLat, double startLon, double endLat, double endLon) async {
@@ -19,7 +23,7 @@ class OpenRouteService {
         body: jsonEncode({
           "coordinates": [
             [startLon, startLat], // Vị trí xuất phát
-            [endLon, endLat],     // Vị trí đích
+            [endLon, endLat], // Vị trí đích
           ],
         }),
       );

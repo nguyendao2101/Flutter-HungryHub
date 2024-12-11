@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_final_fields, unused_field
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hungry_hub/view_model/home_view_model.dart';
 import 'package:flutter_hungry_hub/view_model/test_view_model.dart';
@@ -11,7 +13,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../widgets/common_widget/card/product.dart';
 import '../widgets/common_widget/inwell/home_in_well.dart';
-import '../widgets/common_widget/text/truncated_text.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});

@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
-
 import '../../common/image_extention.dart';
-import '../card/product.dart';
 import '../card/product_grid_view.dart';
 import '../text/title.dart';
-import '../text/truncated_text.dart';
 
 class SnacksView extends StatelessWidget {
   final RxList<Map<String, dynamic>> listDS;

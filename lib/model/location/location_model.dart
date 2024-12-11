@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use, avoid_print
+
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -39,7 +41,8 @@ class LocationService {
       Placemark placemark = placemarks[0];
 
       // Lấy thông tin thành phố và quốc gia, nếu null thì sẽ dùng giá trị mặc định
-      String city = placemark.administrativeArea ?? placemark.subLocality ?? "Hà Nội";
+      String city =
+          placemark.administrativeArea ?? placemark.subLocality ?? "Hà Nội";
       String country = placemark.country ?? "Unknown Country";
 
       // Trả về thông tin địa chỉ và vị trí

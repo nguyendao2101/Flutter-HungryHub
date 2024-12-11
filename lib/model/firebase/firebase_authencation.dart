@@ -3,9 +3,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hungry_hub/view/main_nav_view.dart';
 import 'package:get/get.dart';
-
 import '../../view/login_view.dart';
 import '../../widgets/common_widget/google_map/access_location.dart';
 
@@ -19,7 +17,7 @@ class FirAuth {
     String hoTen,
     String addRess,
     String sex,
-      String numberPhone,
+    String numberPhone,
     String role, // Nhận tham số role
     Function onSuccess,
     Function(String) onRegisterError,
@@ -28,7 +26,8 @@ class FirAuth {
         .createUserWithEmailAndPassword(email: email, password: passWord)
         .then((user) {
       if (user.user != null) {
-        _createUser(user.user!.uid, hoTen, addRess, sex, numberPhone, role, onSuccess);
+        _createUser(
+            user.user!.uid, hoTen, addRess, sex, numberPhone, role, onSuccess);
       }
     }).catchError((err) {
       if (err is FirebaseAuthException) {
@@ -76,7 +75,7 @@ class FirAuth {
             .once();
 
         final userData = userSnapshot.snapshot.value as Map<dynamic, dynamic>?;
-        if (userData == null){
+        if (userData == null) {
           print("User signed is null");
         }
         if (userData != null) {
@@ -136,8 +135,8 @@ class FirAuth {
     }
   }
 
-  void _createUser(String userId, String hoTen, String addRess, String sex, String numberPhone,
-      String? role, Function onSuccess) {
+  void _createUser(String userId, String hoTen, String addRess, String sex,
+      String numberPhone, String? role, Function onSuccess) {
     print("Debug: sex = $sex, numberPhone = $numberPhone"); // Kiểm tra giá trị
     var user = {
       'HoTen': hoTen,
@@ -153,7 +152,6 @@ class FirAuth {
       print("Error: $err");
     });
   }
-
 
   void _onSignUpErr(String code, Function(String) onRegisterError) {
     switch (code) {

@@ -23,8 +23,8 @@ class MainNavView extends StatelessWidget {
       child: Scaffold(
         key: controller.scaffoldKey,
         body: const TabBarView(
-          physics:  NeverScrollableScrollPhysics(), // Tắt vuốt giữa các tab
-          children:  [
+          physics: NeverScrollableScrollPhysics(), // Tắt vuốt giữa các tab
+          children: [
             HomeView(),
             SearchView(),
             OrdersView(),
@@ -42,7 +42,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TabController tabController = DefaultTabController.of(context)!;
+    final TabController tabController = DefaultTabController.of(context);
     final controller = Get.find<MainNavViewModel>();
 
     return Obx(() {
@@ -129,6 +129,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
       ),
     );
   }
+
   Tab _buildTabPNG(String label, String iconPath) {
     return Tab(
       text: label,

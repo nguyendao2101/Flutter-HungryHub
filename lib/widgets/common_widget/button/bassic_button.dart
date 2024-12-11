@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 
 class BasicAppButton extends StatelessWidget {
@@ -10,12 +12,13 @@ class BasicAppButton extends StatelessWidget {
   final double sizeTitle;
   const BasicAppButton(
       {super.key,
-        required this.onPressed,
-        required this.title, this.colorButton,
-        this.radius,
-        this.fontW,
-        this.height,
-        required this.sizeTitle});
+      required this.onPressed,
+      required this.title,
+      this.colorButton,
+      this.radius,
+      this.fontW,
+      this.height,
+      required this.sizeTitle});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +37,10 @@ class BasicAppButton extends StatelessWidget {
         ),
         child: Text(
           title,
-          style: TextStyle(fontSize: sizeTitle, fontWeight: fontW ?? FontWeight.bold, fontFamily: 'Poppins'),
+          style: TextStyle(
+              fontSize: sizeTitle,
+              fontWeight: fontW ?? FontWeight.bold,
+              fontFamily: 'Poppins'),
         ));
   }
 }

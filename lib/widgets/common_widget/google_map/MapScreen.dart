@@ -1,6 +1,11 @@
+// ignore_for_file: unused_local_variable, library_private_types_in_public_api, file_names
+
 import 'package:flutter/material.dart';
 import '../../../model/map/open_Route_Service.dart';
+
 class RouteScreen extends StatefulWidget {
+  const RouteScreen({super.key});
+
   @override
   _RouteScreenState createState() => _RouteScreenState();
 }
@@ -29,7 +34,7 @@ class _RouteScreenState extends State<RouteScreen> {
       setState(() {
         routeInfo = 'Quãng đường: ${(distance / 1000).toStringAsFixed(2)} km\n'
             'Thời gian: ${(duration / 3600).toStringAsFixed(2)} giờ\n\n';
-            // 'Hướng dẫn:\n$instructions';
+        // 'Hướng dẫn:\n$instructions';
       });
     } catch (e) {
       setState(() {
@@ -42,7 +47,7 @@ class _RouteScreenState extends State<RouteScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tính Quãng Đường'),
+        title: const Text('Tính Quãng Đường'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -51,12 +56,12 @@ class _RouteScreenState extends State<RouteScreen> {
           children: [
             Text(
               routeInfo,
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: getRoute,
-              child: Text('Tính Quãng Đường'),
+              child: const Text('Tính Quãng Đường'),
             ),
           ],
         ),

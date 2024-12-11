@@ -37,51 +37,55 @@ class _LoginViewState extends State<LoginView> {
                       ),
                       RichText(
                         text: const TextSpan(
-                            style: TextStyle(fontSize: 24, color: Color(0xff32343E), fontWeight: FontWeight.bold, fontFamily: 'Poppins'),
-                        children: [
-                          TextSpan(
-                            text: '  Just ',
-                          ),
-                          TextSpan(
-                            text: 'Sign in ',
                             style: TextStyle(
-                              color: Color(0xffF44336)
-                            ),
-                          ),
-                          TextSpan(
-                            text: ',we’ll\nprepar your order ',
-                          ),
-                        ]
-                      ),
+                                fontSize: 24,
+                                color: Color(0xff32343E),
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Poppins'),
+                            children: [
+                              TextSpan(
+                                text: '  Just ',
+                              ),
+                              TextSpan(
+                                text: 'Sign in ',
+                                style: TextStyle(color: Color(0xffF44336)),
+                              ),
+                              TextSpan(
+                                text: ',we’ll\nprepar your order ',
+                              ),
+                            ]),
                       ),
                       const SizedBox(
                         height: 20,
                       ),
                       RichText(
-                        text:  TextSpan(
-                            style: const TextStyle(fontSize: 16, color: Color(0xff32343E), fontWeight: FontWeight.w500, fontFamily: 'Poppins'),
+                        text: TextSpan(
+                            style: const TextStyle(
+                                fontSize: 16,
+                                color: Color(0xff32343E),
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Poppins'),
                             children: [
                               const TextSpan(
                                 text: 'If you don’t have an account\nplease ',
                               ),
                               TextSpan(
                                 text: ' Sign up here',
-                                style: const TextStyle(
-                                    color: Color(0xffF44336)
-                                ),
+                                style:
+                                    const TextStyle(color: Color(0xffF44336)),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
                                     // Chuyển màn hình sang SignUpScreen
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => const SignUpView(),
+                                        builder: (context) =>
+                                            const SignUpView(),
                                       ),
                                     );
                                   },
                               ),
-                            ]
-                        ),
+                            ]),
                       ),
                       const SizedBox(
                         height: 40,
@@ -94,44 +98,61 @@ class _LoginViewState extends State<LoginView> {
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          const Padding(
+                          Padding(
                             padding: EdgeInsets.symmetric(horizontal: 12),
                             child: Text(
                               'Forgot password?',
                               style: TextStyle(
-                                fontSize: 14,
-                                color: Color(0xff939393),
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w500
-                              ),
+                                  fontSize: 14,
+                                  color: Color(0xff939393),
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w500),
                             ),
                           ),
                         ],
                       ),
                     ],
                   ),
-                  const SizedBox(height: 30,),
+                  const SizedBox(
+                    height: 30,
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: BasicAppButton(onPressed: (){
-                      if (controller.formKey.currentState?.validate() ==
-                          true) {
-                        controller.onlogin();
-                        controller.emailController.clear();
-                        controller.passwordController.clear();
-                      }
-                    }, title: 'SIGN IN', sizeTitle: 16, height: 53, radius: 12, colorButton: const Color(0xffE53935), fontW: FontWeight.bold,),
+                    child: BasicAppButton(
+                      onPressed: () {
+                        if (controller.formKey.currentState?.validate() ==
+                            true) {
+                          controller.onlogin();
+                          controller.emailController.clear();
+                          controller.passwordController.clear();
+                        }
+                      },
+                      title: 'SIGN IN',
+                      sizeTitle: 16,
+                      height: 53,
+                      radius: 12,
+                      colorButton: const Color(0xffE53935),
+                      fontW: FontWeight.bold,
+                    ),
                   ),
-                  const SizedBox(height: 40,),
+                  const SizedBox(
+                    height: 40,
+                  ),
                   _textOrContinueWith(),
-                  const SizedBox(height: 20,),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   InkWell(
-                    onTap: (){},
-                      child: _siginInWith(ImageAsset.facebook, 'Connect with facebook')),
-                  const SizedBox(height: 8,),
+                      onTap: () {},
+                      child: _siginInWith(
+                          ImageAsset.facebook, 'Connect with facebook')),
+                  const SizedBox(
+                    height: 8,
+                  ),
                   InkWell(
-                    onTap: (){},
-                      child: _siginInWith(ImageAsset.google, 'Connect with Google')),
+                      onTap: () {},
+                      child: _siginInWith(
+                          ImageAsset.google, 'Connect with Google')),
                 ],
               ),
             ),
@@ -141,7 +162,7 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  Padding _siginInWith(String image, String text){
+  Padding _siginInWith(String image, String text) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Container(
@@ -151,7 +172,7 @@ class _LoginViewState extends State<LoginView> {
           color: const Color(0xffFBFBFB),
           border: Border.all(
             color: const Color(0xff9F9F9F), // Màu viền
-            width: 2,           // Độ dày viền
+            width: 2, // Độ dày viền
             style: BorderStyle.solid, // Kiểu viền (solid, dashed, etc.)
           ),
           borderRadius: BorderRadius.circular(10),
@@ -161,9 +182,17 @@ class _LoginViewState extends State<LoginView> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(image),
-              const SizedBox(width: 4,),
-               Text(text,
-                style: const TextStyle(fontFamily: 'Poppins', color: Color(0xff0D0D0D), fontWeight: FontWeight.w500, fontSize: 14),),
+              const SizedBox(
+                width: 4,
+              ),
+              Text(
+                text,
+                style: const TextStyle(
+                    fontFamily: 'Poppins',
+                    color: Color(0xff0D0D0D),
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14),
+              ),
             ],
           ),
         ),
@@ -173,16 +202,19 @@ class _LoginViewState extends State<LoginView> {
 
   Padding _textOrContinueWith() {
     return const Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+      padding: EdgeInsets.symmetric(horizontal: 25.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Padding(
+          Padding(
             padding: EdgeInsets.symmetric(horizontal: 10.0),
             child: Text(
               'OR',
               style: TextStyle(
-                  fontWeight: FontWeight.w500, color: Colors.black, fontSize: 16, fontFamily: 'Poppins'),
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontFamily: 'Poppins'),
             ),
           ),
         ],
@@ -194,17 +226,26 @@ class _LoginViewState extends State<LoginView> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Obx(
-            () => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Password', style: TextStyle(fontSize: 16, color: Color(0xff0D0D0D), fontWeight: FontWeight.w600, fontFamily: 'Poppins'),),
-                const SizedBox(height: 8,),
-                TextFormField(
-                          controller: controller.passwordController,
-                          obscureText: controller.isObscured.value,
-                          style: const TextStyle(
+        () => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Password',
+              style: TextStyle(
+                  fontSize: 16,
+                  color: Color(0xff0D0D0D),
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Poppins'),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            TextFormField(
+              controller: controller.passwordController,
+              obscureText: controller.isObscured.value,
+              style: const TextStyle(
                   color: Colors.black), // Chữ màu đen để dễ nhìn trên nền trắng
-                          decoration: InputDecoration(
+              decoration: InputDecoration(
                 // labelText: 'Password',
                 // labelStyle:
                 // const TextStyle(color: Colors.black), // Nhãn màu xám nhạt
@@ -216,7 +257,8 @@ class _LoginViewState extends State<LoginView> {
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: const BorderSide(
-                      color: Colors.blue, width: 1), // Viền màu xanh khi được chọn
+                      color: Colors.blue,
+                      width: 1), // Viền màu xanh khi được chọn
                 ),
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -243,12 +285,12 @@ class _LoginViewState extends State<LoginView> {
                     color: Colors.grey.withOpacity(0.8), // Màu biểu tượng mắt
                   ),
                 ),
-                          ),
-                          onChanged: controller.onChangePassword,
-                          validator: controller.validatorPassword,
-                        ),
-              ],
+              ),
+              onChanged: controller.onChangePassword,
+              validator: controller.validatorPassword,
             ),
+          ],
+        ),
       ),
     );
   }
@@ -259,13 +301,23 @@ class _LoginViewState extends State<LoginView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Email address', style: TextStyle(fontSize: 16, color: Color(0xff0D0D0D), fontWeight: FontWeight.w600, fontFamily: 'Poppins'),),
-          const SizedBox(height: 8,),
+          const Text(
+            'Email address',
+            style: TextStyle(
+                fontSize: 16,
+                color: Color(0xff0D0D0D),
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Poppins'),
+          ),
+          const SizedBox(
+            height: 8,
+          ),
           TextFormField(
             controller: controller.emailController,
             obscureText: false,
             style: const TextStyle(
-                color: Colors.black), // Chữ màu đen để hiển thị rõ trên nền trắng
+                color:
+                    Colors.black), // Chữ màu đen để hiển thị rõ trên nền trắng
             decoration: InputDecoration(
               // labelText: 'Email',
               // labelStyle: const TextStyle(color: Colors.black), // Nhãn màu xám nhạt
@@ -277,7 +329,8 @@ class _LoginViewState extends State<LoginView> {
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: const BorderSide(
-                    color: Colors.blue, width: 1), // Viền màu xanh khi được chọn
+                    color: Colors.blue,
+                    width: 1), // Viền màu xanh khi được chọn
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),

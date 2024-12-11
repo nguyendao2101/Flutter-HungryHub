@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field, prefer_final_fields, avoid_print, use_build_context_synchronously, unnecessary_to_list_in_spreads
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hungry_hub/view_model/test_view_model.dart';
 import 'package:get/get.dart';
@@ -103,14 +105,14 @@ class _TestViewState extends State<TestView> {
   Future<void> _placeOrder() async {
     if (_selectedStoreId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Vui lòng chọn cửa hàng!')),
+        const SnackBar(content: Text('Vui lòng chọn cửa hàng!')),
       );
       return;
     }
 
     if (_cart.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Giỏ hàng của bạn không có sản phẩm!')),
+        const SnackBar(content: Text('Giỏ hàng của bạn không có sản phẩm!')),
       );
       return;
     }
@@ -141,14 +143,15 @@ class _TestViewState extends State<TestView> {
 
       Navigator.pop(context); // Đóng dialog
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Đơn hàng của bạn đã được đặt thành công!')),
+        const SnackBar(
+            content: Text('Đơn hàng của bạn đã được đặt thành công!')),
       );
     } catch (error) {
       setState(() {
         _isPlacingOrder = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
             content: Text('Có lỗi xảy ra khi đặt hàng, vui lòng thử lại!')),
       );
     }
@@ -212,7 +215,6 @@ class _TestViewState extends State<TestView> {
   //   }
   // }
 
-
   // Hiển thị giỏ hàng
   void _showCartDialog() {
     showDialog(
@@ -221,7 +223,7 @@ class _TestViewState extends State<TestView> {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setStateDialog) {
             return AlertDialog(
-              title: Text('Giỏ hàng'),
+              title: const Text('Giỏ hàng'),
               content: SingleChildScrollView(
                 child: Column(
                   children: [
@@ -236,7 +238,7 @@ class _TestViewState extends State<TestView> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: Icon(Icons.remove),
+                              icon: const Icon(Icons.remove),
                               onPressed: () {
                                 setStateDialog(() {
                                   if (item.quantity > 1) {
@@ -251,7 +253,7 @@ class _TestViewState extends State<TestView> {
                             ),
                             Text('${item.quantity}'),
                             IconButton(
-                              icon: Icon(Icons.add),
+                              icon: const Icon(Icons.add),
                               onPressed: () {
                                 setStateDialog(() {
                                   item.quantity++;
@@ -269,7 +271,7 @@ class _TestViewState extends State<TestView> {
                     if (_stores.isNotEmpty)
                       DropdownButton<String>(
                         value: _selectedStoreId,
-                        hint: Text('Chọn cửa hàng'),
+                        hint: const Text('Chọn cửa hàng'),
                         isExpanded: true,
                         items: _stores.map((store) {
                           return DropdownMenuItem<String>(
@@ -286,8 +288,8 @@ class _TestViewState extends State<TestView> {
 
                     // Nếu không có cửa hàng để chọn
                     if (_stores.isEmpty && !_isLoadingStores)
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
                         child: Text('Không có cửa hàng nào, vui lòng thử lại!'),
                       ),
 
@@ -296,7 +298,7 @@ class _TestViewState extends State<TestView> {
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Text(
                         'Tổng tiền: ${getTotalPrice()} VND',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],
@@ -307,7 +309,7 @@ class _TestViewState extends State<TestView> {
                   onPressed: () {
                     Navigator.pop(context); // Đóng dialog
                   },
-                  child: Text('Đóng'),
+                  child: const Text('Đóng'),
                 ),
                 ElevatedButton(
                   onPressed: _isPlacingOrder
@@ -319,8 +321,8 @@ class _TestViewState extends State<TestView> {
                               () {}); // Cập nhật state của toàn màn hình nếu cần
                         },
                   child: _isPlacingOrder
-                      ? CircularProgressIndicator()
-                      : Text('Thanh toán'),
+                      ? const CircularProgressIndicator()
+                      : const Text('Thanh toán'),
                 ),
               ],
             );
@@ -334,10 +336,10 @@ class _TestViewState extends State<TestView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Danh sách sản phẩm'),
+        title: const Text('Danh sách sản phẩm'),
         actions: [
           IconButton(
-            icon: Icon(Icons.shopping_cart),
+            icon: const Icon(Icons.shopping_cart),
             onPressed: () {
               // Hiển thị giỏ hàng khi nhấn vào biểu tượng giỏ hàng
               _showCartDialog();
@@ -349,7 +351,7 @@ class _TestViewState extends State<TestView> {
         children: [
           Expanded(
             child: _isLoadingProducts
-                ? Center(child: CircularProgressIndicator())
+                ? const Center(child: CircularProgressIndicator())
                 : ListView.builder(
                     itemCount: _products.length,
                     itemBuilder: (context, index) {
@@ -364,7 +366,7 @@ class _TestViewState extends State<TestView> {
                         title: Text(product['Name']),
                         subtitle: Text('Giá: ${product['Price']} VND'),
                         trailing: IconButton(
-                          icon: Icon(Icons.add_shopping_cart),
+                          icon: const Icon(Icons.add_shopping_cart),
                           onPressed: () => _addToCart(product),
                         ),
                       );

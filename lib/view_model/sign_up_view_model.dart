@@ -1,7 +1,8 @@
+// ignore_for_file: avoid_print
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:mailer/mailer.dart';
 import 'dart:math';
@@ -20,7 +21,6 @@ class SignUpViewModel extends GetxController {
   late String address;
   late String sex;
   late String numberPhone;
-
 
   RxBool isEntryPasswordObscured = true.obs;
   RxBool isObscured = true.obs;
@@ -71,6 +71,7 @@ class SignUpViewModel extends GetxController {
     sex = valuesex;
     formKey.currentState?.validate();
   }
+
   void onChangeCheckNumberPhone(String valueNumberPhone) {
     numberPhone = valueNumberPhone;
     formKey.currentState?.validate();
@@ -107,7 +108,6 @@ class SignUpViewModel extends GetxController {
     });
   }
 
-
   bool containsSpecialCharacters(String text) {
     final allowedSpecialCharacters = RegExp(r'[!@#\$%^&*(),.?":{}|<>]');
     return allowedSpecialCharacters.hasMatch(text);
@@ -136,6 +136,7 @@ class SignUpViewModel extends GetxController {
       return null;
     }
   }
+
   Future<void> sendEmail(String email, String code) async {
     String username = 'hungryhubb1@gmail.com'; // Email gửi
     String password = 'nrhc ernj lejs fpyi'; // Mật khẩu email gửi
@@ -146,7 +147,8 @@ class SignUpViewModel extends GetxController {
       ..from = Address(username, 'HungryHub')
       ..recipients.add(email) // Email nhận
       ..subject = 'Mã xác minh tài khoản'
-      ..text = 'Chào bạn!\nCảm ơn bạn đã quan tâm và đăng ký tài khoản HungryHub\nMã xác minh của bạn là: $code\nChúc bạn có những giây phút mua hàng vui vẻ!!\nĐừng quên đánh giá 5 sao cho sản phẩm nhé!!';
+      ..text =
+          'Chào bạn!\nCảm ơn bạn đã quan tâm và đăng ký tài khoản HungryHub\nMã xác minh của bạn là: $code\nChúc bạn có những giây phút mua hàng vui vẻ!!\nĐừng quên đánh giá 5 sao cho sản phẩm nhé!!';
 
     try {
       await send(message, smtpServer);
@@ -155,9 +157,11 @@ class SignUpViewModel extends GetxController {
       print('Gửi email thất bại: $e');
     }
   }
+
   String generateVerificationCode() {
     var random = Random();
-    return (random.nextInt(900000) + 100000).toString(); // Tạo số từ 100000 đến 999999
+    return (random.nextInt(900000) + 100000)
+        .toString(); // Tạo số từ 100000 đến 999999
   }
 
   String? validatorPassword(String? value) {

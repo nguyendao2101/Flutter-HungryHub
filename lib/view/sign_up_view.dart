@@ -1,9 +1,9 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
-import 'package:flutter_hungry_hub/widgets/common_widget/button/bassic_button.dart';
 import 'package:get/get.dart';
 import '../view_model/sign_up_view_model.dart';
 import '../widgets/common_widget/check_mail/check_mail.dart';
-import 'login_view.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
@@ -78,7 +78,6 @@ class _SignUpViewState extends State<SignUpView> {
                   onChanged: controller.onChangeCheckNumberPhone,
                   validator: controller.validatorCheck,
                 ),
-
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Obx(() {
@@ -88,30 +87,39 @@ class _SignUpViewState extends State<SignUpView> {
                     return ElevatedButton(
                       onPressed: () {
                         if (controller.isValidSignupForm()) {
-                          controller.sendEmail(controller.email, codeMail.toString());
+                          controller.sendEmail(
+                              controller.email, codeMail.toString());
                           print('test ma code1: $codeMail');
-                          Get.to(() => CheckMail(email: controller.email, password: controller.password, fullName: controller.hoTen, address: controller.address, sex: controller.sex, phoneNumber: controller.numberPhone,verificationCode: codeMail.toString(),));
+                          Get.to(() => CheckMail(
+                                email: controller.email,
+                                password: controller.password,
+                                fullName: controller.hoTen,
+                                address: controller.address,
+                                sex: controller.sex,
+                                phoneNumber: controller.numberPhone,
+                                verificationCode: codeMail.toString(),
+                              ));
                         }
-
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xffE53935),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 145),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15, horizontal: 145),
                       ),
                       child: controller.isLoading.value
                           ? const CircularProgressIndicator(
-                        color: Colors.white,
-                      )
+                              color: Colors.white,
+                            )
                           : const Text(
-                        'Continue',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                              'Continue',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                     );
                   }),
                 ),
@@ -122,19 +130,26 @@ class _SignUpViewState extends State<SignUpView> {
       ),
     );
   }
+
   Padding _formPassword(SignUpViewModel controller) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: Obx(
-            () => TextFormField(
+        () => TextFormField(
           obscureText: controller.isObscured.value,
 
           style: const TextStyle(
-              color: Color(0xff939393), fontFamily: 'Poppins', fontWeight: FontWeight.w500, fontSize: 16), // Chữ màu đen để dễ nhìn trên nền trắng
+              color: Color(0xff939393),
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w500,
+              fontSize: 16), // Chữ màu đen để dễ nhìn trên nền trắng
           decoration: InputDecoration(
             labelText: 'Password',
-            labelStyle:
-            const TextStyle(color: Color(0xff939393), fontFamily: 'Poppins', fontWeight: FontWeight.w500, fontSize: 16), // Nhãn màu xám nhạt
+            labelStyle: const TextStyle(
+                color: Color(0xff939393),
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w500,
+                fontSize: 16), // Nhãn màu xám nhạt
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8), // Bo góc đường viền
               borderSide: BorderSide(
@@ -159,8 +174,11 @@ class _SignUpViewState extends State<SignUpView> {
             filled: true,
             fillColor: Colors.grey[200], // Màu nền xám nhạt cho trường nhập
             hintText: 'Password',
-            hintStyle: TextStyle(
-                color: Color(0xff939393), fontFamily: 'Poppins', fontWeight: FontWeight.w500, fontSize: 16), // Gợi ý màu xám nhạt
+            hintStyle: const TextStyle(
+                color: Color(0xff939393),
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w500,
+                fontSize: 16), // Gợi ý màu xám nhạt
             suffixIcon: GestureDetector(
               onTap: () => controller.toggleObscureText(),
               child: Icon(
@@ -182,14 +200,20 @@ class _SignUpViewState extends State<SignUpView> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: Obx(
-            () => TextFormField(
+        () => TextFormField(
           obscureText: controller.isEntryPasswordObscured.value,
           style: const TextStyle(
-              color: Color(0xff939393), fontFamily: 'Poppins', fontWeight: FontWeight.w500, fontSize: 16), // Chữ màu đen để dễ nhìn trên nền trắng
+              color: Color(0xff939393),
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w500,
+              fontSize: 16), // Chữ màu đen để dễ nhìn trên nền trắng
           decoration: InputDecoration(
             labelText: 'Password',
-            labelStyle:
-            const TextStyle(color: Color(0xff939393), fontFamily: 'Poppins', fontWeight: FontWeight.w500, fontSize: 16), // Nhãn màu xám nhạt
+            labelStyle: const TextStyle(
+                color: Color(0xff939393),
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w500,
+                fontSize: 16), // Nhãn màu xám nhạt
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8), // Bo góc đường viền
               borderSide: BorderSide(
@@ -214,8 +238,11 @@ class _SignUpViewState extends State<SignUpView> {
             filled: true,
             fillColor: Colors.grey[200], // Màu nền xám nhạt cho trường nhập
             hintText: 'Password',
-            hintStyle: TextStyle(
-                color: Color(0xff939393), fontFamily: 'Poppins', fontWeight: FontWeight.w500, fontSize: 16), // Gợi ý màu xám nhạt
+            hintStyle: const TextStyle(
+                color: Color(0xff939393),
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w500,
+                fontSize: 16), // Gợi ý màu xám nhạt
             suffixIcon: GestureDetector(
               onTap: () => controller.toggleEntryPasswordObscureText(),
               child: Icon(
@@ -232,16 +259,24 @@ class _SignUpViewState extends State<SignUpView> {
       ),
     );
   }
+
   Padding _formEmail(SignUpViewModel controller) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: TextFormField(
         obscureText: false,
         style: const TextStyle(
-            color: Color(0xff939393), fontFamily: 'Poppins', fontWeight: FontWeight.w500, fontSize: 16), // Chữ màu đen để hiển thị rõ trên nền trắng
+            color: Color(0xff939393),
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w500,
+            fontSize: 16), // Chữ màu đen để hiển thị rõ trên nền trắng
         decoration: InputDecoration(
           labelText: 'Email',
-          labelStyle: const TextStyle(color: Color(0xff939393), fontFamily: 'Poppins', fontWeight: FontWeight.w500, fontSize: 16), // Nhãn màu xám nhạt
+          labelStyle: const TextStyle(
+              color: Color(0xff939393),
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w500,
+              fontSize: 16), // Nhãn màu xám nhạt
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8), // Bo góc đường viền
             borderSide: BorderSide(
@@ -266,8 +301,11 @@ class _SignUpViewState extends State<SignUpView> {
           filled: true,
           fillColor: Colors.grey[200], // Màu nền xám nhạt cho trường nhập
           hintText: 'Email',
-          hintStyle: TextStyle(
-              color: Color(0xff939393), fontFamily: 'Poppins', fontWeight: FontWeight.w500, fontSize: 16), // Gợi ý màu xám nhạt
+          hintStyle: const TextStyle(
+              color: Color(0xff939393),
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w500,
+              fontSize: 16), // Gợi ý màu xám nhạt
         ),
         onChanged: controller.onChangeUsername,
         validator: controller.validatorUsername,
@@ -287,10 +325,18 @@ class _SignUpViewState extends State<SignUpView> {
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: TextFormField(
         obscureText: obscureText,
-        style: const TextStyle(color: Color(0xff939393), fontFamily: 'Poppins', fontWeight: FontWeight.w500, fontSize: 16),
+        style: const TextStyle(
+            color: Color(0xff939393),
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w500,
+            fontSize: 16),
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: const TextStyle(color: Color(0xff939393), fontFamily: 'Poppins', fontWeight: FontWeight.w500, fontSize: 16),
+          labelStyle: const TextStyle(
+              color: Color(0xff939393),
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w500,
+              fontSize: 16),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide(color: Colors.grey.shade400, width: 1),
@@ -310,7 +356,11 @@ class _SignUpViewState extends State<SignUpView> {
           filled: true,
           fillColor: Colors.grey[200],
           hintText: hintText,
-          hintStyle: TextStyle(color: Color(0xff939393), fontFamily: 'Poppins', fontWeight: FontWeight.w500, fontSize: 16),
+          hintStyle: const TextStyle(
+              color: Color(0xff939393),
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w500,
+              fontSize: 16),
         ),
         onChanged: onChanged,
         validator: validator,

@@ -1,8 +1,9 @@
+// ignore_for_file: use_build_context_synchronously, deprecated_member_use
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hungry_hub/view/main_nav_view.dart';
 import 'package:flutter_hungry_hub/widgets/common/image_extention.dart';
-import 'package:flutter_hungry_hub/widgets/common_widget/button/bassic_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:get/get.dart';
@@ -14,8 +15,6 @@ class AccessLocation extends StatefulWidget {
   @override
   State<AccessLocation> createState() => _AccessLocationState();
 }
-
-
 
 class _AccessLocationState extends State<AccessLocation> {
   final DatabaseReference _database = FirebaseDatabase.instance.ref();
@@ -42,7 +41,8 @@ class _AccessLocationState extends State<AccessLocation> {
       }
 
       String userId = currentUser.uid; // ID của người dùng hiện tại
-      String locationData = await LocationService().getCurrentLocationAndAddress();
+      String locationData =
+          await LocationService().getCurrentLocationAndAddress();
 
       // Ghi dữ liệu vị trí vào Firebase Realtime Database
       await _database.child('users/$userId/location').set(locationData);
@@ -52,7 +52,7 @@ class _AccessLocationState extends State<AccessLocation> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Location updated successfully!")),
+        const SnackBar(content: Text("Location updated successfully!")),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -76,7 +76,6 @@ class _AccessLocationState extends State<AccessLocation> {
                   await _uploadLocationToFirebase(); // Gọi hàm
                   Get.to(() => const MainNavView(initialIndex: 0));
                 },
-
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xffFF7622),
                   foregroundColor: const Color(0xFFFFFFFF),
@@ -144,7 +143,8 @@ class _AccessLocationState extends State<AccessLocation> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image.asset(ImageAsset.marker, height: 24, width: 24),
+                            Image.asset(ImageAsset.marker,
+                                height: 24, width: 24),
                             const SizedBox(width: 10),
                             const Text(
                               'Your Location',
@@ -176,4 +176,3 @@ class _AccessLocationState extends State<AccessLocation> {
     );
   }
 }
-
