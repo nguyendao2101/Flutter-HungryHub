@@ -1,6 +1,7 @@
 // ignore_for_file: use_super_parameters
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hungry_hub/widgets/common_widget/evaluate/evaluate.dart';
 import '../../common/image_extention.dart';
 import '../food_detail/food_detail.dart';
 import '../text/truncated_text.dart';
@@ -71,32 +72,7 @@ class ProductCardVeri extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    height: 24,
-                    width: 71,
-                    decoration: BoxDecoration(
-                      color: const Color(0xffEF5350),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Image.asset(ImageAsset.starRating),
-                          const Text(
-                            '4.2',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Poppins',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  const Evaluate(height: 24, width: 71),
                   const Text(
                     ' • 32 min',
                     style: TextStyle(

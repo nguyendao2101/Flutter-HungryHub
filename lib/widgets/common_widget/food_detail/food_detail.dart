@@ -1,17 +1,68 @@
 // ignore_for_file: prefer_const_constructors_in_immutables, unused_element
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hungry_hub/widgets/common/image_extention.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../model/location/location_model.dart';
 import '../button/bassic_button.dart';
 import '../text/title_see_more.dart';
 
-class FoodDetail extends StatelessWidget {
+class FoodDetail extends StatefulWidget {
   final Map<String, dynamic> productDetail;
 
   // Constructor receives productDetail as a map.
   FoodDetail({super.key, required this.productDetail});
+
+  @override
+  State<FoodDetail> createState() => _FoodDetailState();
+}
+
+class _FoodDetailState extends State<FoodDetail> {
+  final DatabaseReference _database = FirebaseDatabase.instance.ref();
+  final List<Map<String, dynamic>> shoppingCart = [];
+
+  Future<void> _addToShoppingCart(Map<String, dynamic> product) async {
+    try {
+      User? currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser == null) {
+        throw Exception("No user is signed in.");
+      }
+
+      String userId = currentUser.uid;
+
+      // Lấy danh sách ShoppingCart hiện tại từ Firebase
+      final snapshot = await _database.child('users/$userId/ShoppingCart').get();
+      List<dynamic> currentCart = [];
+
+      if (snapshot.exists && snapshot.value is List) {
+        currentCart = List<dynamic>.from(snapshot.value as List);
+      }
+
+      // Thêm sản phẩm mới vào danh sách
+      currentCart.add(product);
+
+      // Ghi danh sách cập nhật lên Firebase
+      await _database.child('users/$userId/ShoppingCart').set(currentCart);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Product added to ShoppingCart!")),
+      );
+
+      setState(() {
+        shoppingCart.clear();
+        shoppingCart.addAll(currentCart as Iterable<Map<String, dynamic>>);
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to add product: $e")),
+      );
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +152,7 @@ class FoodDetail extends StatelessWidget {
                     borderRadius: BorderRadius.circular(
                         20), // Đảm bảo ảnh cũng có góc bo tròn như container
                     child: Image.network(
-                      productDetail['ImageUrl'],
+                      widget.productDetail['ImageUrl'],
                       fit: BoxFit.fill, // Làm ảnh fill toàn bộ container
                     ),
                   ),
@@ -111,7 +162,7 @@ class FoodDetail extends StatelessWidget {
                 height: 10,
               ),
               Text(
-                '${productDetail['Price']} VNĐ',
+                '${widget.productDetail['Price']} VNĐ',
                 style: const TextStyle(
                   fontSize: 20,
                   color: Color(0xffA02334),
@@ -123,7 +174,7 @@ class FoodDetail extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    productDetail['Name'],
+                    widget.productDetail['Name'],
                     style: const TextStyle(
                       fontSize: 16,
                       color: Color(0xff32343E),
@@ -133,7 +184,7 @@ class FoodDetail extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    productDetail['Description'],
+                    widget.productDetail['Description'],
                     style: const TextStyle(
                       fontSize: 16,
                       color: Color(0xff32343E),
@@ -149,7 +200,9 @@ class FoodDetail extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 child: BasicAppButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _addToShoppingCart(widget.productDetail);
+                  },
                   title: 'ADD',
                   sizeTitle: 14,
                   colorButton: const Color(0xffFF7622),
