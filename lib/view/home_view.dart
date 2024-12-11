@@ -11,7 +11,7 @@ import 'package:flutter_hungry_hub/widgets/common_widget/food_view/snacks_view.d
 import 'package:flutter_hungry_hub/widgets/common_widget/text/title_see_more.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import '../widgets/common_widget/card/product.dart';
+import '../widgets/common_widget/card/product_list_view_hori.dart';
 import '../widgets/common_widget/inwell/home_in_well.dart';
 
 class HomeView extends StatefulWidget {
@@ -419,31 +419,6 @@ class _HomeViewState extends State<HomeView> {
                         },
                       ),
               ),
-              // InkWell(
-              //     onTap: () {},
-              //     child: const TitleSeeMore(title: 'Drinks And Desserts')),
-              // SizedBox(
-              //   height: 285, // Chiều cao cố định cho danh sách ngang
-              //   child: _isLoadingProducts
-              //       ? const Center(child: CircularProgressIndicator())
-              //       : ListView.builder(
-              //           scrollDirection: Axis.horizontal,
-              //           itemCount: _products.length,
-              //           itemBuilder: (context, index) {
-              //             final product = _products[index];
-              //             if (product['Category'] ==
-              //                 'Thức uống & tráng miệng') {
-              //               return Padding(
-              //                 padding:
-              //                     const EdgeInsets.symmetric(horizontal: 8.0),
-              //                 child: ProductCard(product: product),
-              //               );
-              //             }
-              //             return const SizedBox
-              //                 .shrink(); // Ẩn các sản phẩm không phù hợp
-              //           },
-              //         ),
-              // ),
               const SizedBox(height: 20),
             ],
           ),
