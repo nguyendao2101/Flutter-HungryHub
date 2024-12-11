@@ -3,8 +3,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hungry_hub/view_model/home_view_model.dart';
 import 'package:flutter_hungry_hub/widgets/common/image_extention.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 import '../../../model/location/location_model.dart';
 import '../button/bassic_button.dart';
@@ -21,49 +23,7 @@ class FoodDetail extends StatefulWidget {
 }
 
 class _FoodDetailState extends State<FoodDetail> {
-  final DatabaseReference _database = FirebaseDatabase.instance.ref();
-  final List<Map<String, dynamic>> shoppingCart = [];
-
-  Future<void> _addToShoppingCart(Map<String, dynamic> product) async {
-    try {
-      User? currentUser = FirebaseAuth.instance.currentUser;
-
-      if (currentUser == null) {
-        throw Exception("No user is signed in.");
-      }
-
-      String userId = currentUser.uid;
-
-      // Lấy danh sách ShoppingCart hiện tại từ Firebase
-      final snapshot = await _database.child('users/$userId/ShoppingCart').get();
-      List<dynamic> currentCart = [];
-
-      if (snapshot.exists && snapshot.value is List) {
-        currentCart = List<dynamic>.from(snapshot.value as List);
-      }
-
-      // Thêm sản phẩm mới vào danh sách
-      currentCart.add(product);
-
-      // Ghi danh sách cập nhật lên Firebase
-      await _database.child('users/$userId/ShoppingCart').set(currentCart);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Product added to ShoppingCart!")),
-      );
-
-      setState(() {
-        shoppingCart.clear();
-        shoppingCart.addAll(currentCart as Iterable<Map<String, dynamic>>);
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to add product: $e")),
-      );
-    }
-  }
-
-
+  final controller = Get.put(HomeViewModel());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -201,7 +161,7 @@ class _FoodDetailState extends State<FoodDetail> {
                     const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 child: BasicAppButton(
                   onPressed: () {
-                    _addToShoppingCart(widget.productDetail);
+                    controller.addToShoppingCart(widget.productDetail);
                   },
                   title: 'ADD',
                   sizeTitle: 14,

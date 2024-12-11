@@ -42,7 +42,7 @@ class _OrdersViewState extends State<OrdersView> {
               final isSelected = controller.selectedItems.contains(index); // Kiểm tra item có được chọn
 
               return Container(
-                margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12), // Cách lề cho container// Padding bên trong container
+                margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12), // Cách lề cho container// Padding bên trong container
                 decoration: BoxDecoration(
                   color: Colors.white, // Màu nền của container
                   borderRadius: BorderRadius.circular(10), // Để bo tròn góc của container
@@ -51,7 +51,7 @@ class _OrdersViewState extends State<OrdersView> {
                       color: Colors.grey.withOpacity(0.3),
                       spreadRadius: 2,
                       blurRadius: 5,
-                      offset: Offset(0, 3), // Đổ bóng
+                      offset: const Offset(0, 3), // Đổ bóng
                     ),
                   ],
                 ),
@@ -127,7 +127,7 @@ class _OrdersViewState extends State<OrdersView> {
                     onChanged: (bool? value) {
                       controller.toggleItemSelection(index); // Cập nhật trạng thái chọn
                     },
-                    activeColor: Color(0xffD42323), // Màu khi checkbox được chọn
+                    activeColor: const Color(0xffD42323), // Màu khi checkbox được chọn
                     checkColor: Colors.white,
                   )),
                 ),
@@ -142,7 +142,7 @@ class _OrdersViewState extends State<OrdersView> {
           }
           return FloatingActionButton.extended(
             onPressed: () {
-              Get.to(() => Pay());
+              Get.to(() => Pay(product: controller.checkoutSelectedItems(),));
               // controller.checkoutSelectedItems(); // Xử lý thanh toán
             },
             label: const Text('Buy', style: TextStyle(
@@ -151,7 +151,7 @@ class _OrdersViewState extends State<OrdersView> {
               fontWeight: FontWeight.w500,
               fontFamily: 'Poppins',
             ),),
-            backgroundColor: Color(0xffEF5350),
+            backgroundColor: const Color(0xffEF5350),
             icon: const Icon(Icons.shopping_cart_checkout, color: Colors.white,),
           );
         }),

@@ -3,14 +3,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class HomeViewModel extends GetxController {
   late TextEditingController searchController = TextEditingController();
+  final DatabaseReference _database = FirebaseDatabase.instance.ref();
+  final List<Map<String, dynamic>> shoppingCart = [];
 
   final formKey = GlobalKey<FormState>();
-  final _database = FirebaseDatabase.instance.ref();
   final _userData = {}.obs;
   String _userId = '';
   late stt.SpeechToText _speech;
@@ -31,6 +33,61 @@ class HomeViewModel extends GetxController {
       await _getUserData();
     }
   }
+  Future<void> addToShoppingCart(Map<String, dynamic> product) async {
+    try {
+      User? currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser == null) {
+        throw Exception("No user is signed in.");
+      }
+
+      String userId = currentUser.uid;
+
+      // Lấy danh sách ShoppingCart hiện tại từ Firebase
+      final snapshot = await _database.child('users/$userId/ShoppingCart').get();
+      List<dynamic> currentCart = [];
+
+      if (snapshot.exists && snapshot.value is List) {
+        currentCart = List<dynamic>.from(snapshot.value as List);
+      }
+
+      // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
+      bool isProductInCart = currentCart.any((item) => item['id'] == product['id']); // Kiểm tra dựa trên 'id' của sản phẩm
+
+      if (isProductInCart) {
+        Get.snackbar(
+          "Info",
+          "This product is already in your shopping cart.",
+          snackPosition: SnackPosition.TOP,
+        );
+      } else {
+        // Thêm sản phẩm mới vào danh sách
+        currentCart.add(product);
+
+        // Ghi danh sách cập nhật lên Firebase
+        await _database.child('users/$userId/ShoppingCart').set(currentCart);
+
+        // Cập nhật lại shoppingCart và thông báo thành công
+        shoppingCart.clear();
+        shoppingCart.addAll(currentCart.cast<Map<String, dynamic>>()); // Cập nhật shoppingCart bằng cách cast lại dữ liệu
+        update(); // Cập nhật UI
+
+        Get.snackbar(
+          "Success",
+          "Product added to ShoppingCart!",
+          snackPosition: SnackPosition.TOP,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Success",
+        "Product added to ShoppingCart!",
+        snackPosition: SnackPosition.TOP,
+      );
+    }
+  }
+
+
 
   Future<void> _getUserData() async {
     DatabaseReference userRef = _database.child('users/$_userId');

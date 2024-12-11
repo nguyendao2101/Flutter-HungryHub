@@ -1,6 +1,8 @@
 // ignore_for_file: use_super_parameters
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hungry_hub/view_model/home_view_model.dart';
+import 'package:get/get.dart';
 import '../../common/image_extention.dart';
 import '../evaluate/evaluate.dart';
 import '../food_detail/food_detail.dart';
@@ -13,6 +15,7 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(HomeViewModel());
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -84,7 +87,7 @@ class ProductCard extends StatelessWidget {
                   IconButton(
                     icon: const Icon(Icons.add_shopping_cart),
                     onPressed: () {
-                      // Thêm sản phẩm vào giỏ hàng
+                      controller.addToShoppingCart(product);
                     },
                   ),
                 ],
