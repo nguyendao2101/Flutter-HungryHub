@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hungry_hub/view_model/home_view_model.dart';
+import 'package:get/get.dart';
 
 import '../../common/image_extention.dart';
 import '../evaluate/evaluate.dart';
@@ -11,6 +13,7 @@ class ProductGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(HomeViewModel());
     return GestureDetector(
       onTap: (){
         Navigator.push(
@@ -34,7 +37,7 @@ class ProductGridView extends StatelessWidget {
                 child: Image.network(
                   product['ImageUrl'] ?? '',
                   width: double.infinity,
-                  height: 110,
+                  height: 95,
                   fit: BoxFit.fill,
                 ),
               ),
@@ -45,7 +48,7 @@ class ProductGridView extends StatelessWidget {
                   children: [
                     TruncatedText(
                       text: product['Name'],
-                      maxWidth: 190,
+                      maxWidth: 180,
                       style: const TextStyle(
                         fontSize: 16,
                         color: Color(0xff32343E),
@@ -65,33 +68,30 @@ class ProductGridView extends StatelessWidget {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-                child: Column(
-                  children: [
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Evaluate(height: 24, width: 71),
-                        Text(
-                          ' • 32 min',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Poppins',
-                          ),
+              Column(
+                children: [
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Evaluate(height: 24, width: 71),
+                      Text(
+                        ' • 32 min',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Poppins',
                         ),
-                      ],
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.add_shopping_cart),
-                      onPressed: () {
-                        // Thêm sản phẩm vào giỏ hàng
-                      },
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.add_shopping_cart),
+                    onPressed: () {
+                      controller.addToShoppingCart(product);
+                    },
+                  ),
+                ],
               ),
             ],
           ),

@@ -1,9 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:get/get.dart';
 
 class OrdersViewModel extends GetxController {
+  //firebase realtime
   final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref();
+  //firebase firestore
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  final RxList<Map<String, dynamic>> coupons = <Map<String, dynamic>>[].obs;
   final RxList<Map<String, dynamic>> ordersList = <Map<String, dynamic>>[].obs;
   final RxList<int> selectedItems = <int>[].obs; // Danh sách index của các sản phẩm được chọn
 
@@ -14,7 +20,31 @@ class OrdersViewModel extends GetxController {
     super.onInit();
     _initializeUserId();
     _listenToOrders();
+    fetchCoupons();
   }
+  // hàm lấy danh sách coupon
+  Future<void> fetchCoupons() async {
+    try {
+      print('Fetching coupons...');
+      final QuerySnapshot snapshot = await _firestore.collection('coupon').get();
+      print('Raw snapshot data: ${snapshot.docs}');
+
+      final fetchedCoupons = snapshot.docs.map((doc) {
+        print('Document ID: ${doc.id}, Data: ${doc.data()}');
+        return {
+          'id': doc.id,
+          ...doc.data() as Map<String, dynamic>,
+        };
+      }).toList();
+
+      coupons.assignAll(fetchedCoupons); // Cập nhật danh sách coupon
+      print('Fetched coupons: $fetchedCoupons');
+      print('Fetched coupons2: $coupons');
+    } catch (e) {
+      print('Error fetching coupons: ${e.toString()}');
+    }
+  }
+
 
   void _initializeUserId() {
     User? currentUser = FirebaseAuth.instance.currentUser;
@@ -78,6 +108,14 @@ class OrdersViewModel extends GetxController {
 
     // Trả về danh sách các sản phẩm đã được chọn
     return selectedProducts;
+  }
+
+  double calculateTotal(List<Map<String, dynamic>> product) {
+    double total = 0.0;
+    for (var item in product) {
+      total += item['Price']*item['Quantity']; // Cộng dồn giá của mỗi sản phẩm
+    }
+    return total;
   }
 
 

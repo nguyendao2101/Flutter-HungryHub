@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hungry_hub/view_model/orders_view_model.dart';
 import 'package:flutter_hungry_hub/widgets/common/image_extention.dart';
+import 'package:flutter_hungry_hub/widgets/common_widget/button/bassic_button.dart';
+import 'package:flutter_hungry_hub/widgets/common_widget/order/select_payment.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 import '../evaluate/evaluate.dart';
@@ -14,17 +18,15 @@ class Pay extends StatefulWidget {
 }
 
 class _PayState extends State<Pay> {
-  // tinh tong so tien phai thanh toan
-  double _calculateTotal() {
-    double total = 0.0;
-    for (var item in widget.product) {
-      total += item['Price']*item['Quantity']; // Cộng dồn giá của mỗi sản phẩm
-    }
-    return total;
-  }
+  final controller = Get.put(OrdersViewModel());
+  TextEditingController couponController = TextEditingController();
+  double coupon = 0;  // Khai báo coupon là biến trạng thái
+  double delivery = 30000;  // Khai báo coupon là biến trạng thái
+
   @override
   Widget build(BuildContext context) {
-    double total = _calculateTotal();
+    double total1 = controller.calculateTotal(widget.product);  // Cập nhật tổng tiền với coupon
+    double total = controller.calculateTotal(widget.product) - coupon + delivery;  // Cập nhật tổng tiền với coupon
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -74,7 +76,7 @@ class _PayState extends State<Pay> {
               ListView.builder(
                 itemCount: widget.product.length,
                 shrinkWrap: true,  // Đảm bảo ListView không chiếm quá nhiều không gian
-                physics: NeverScrollableScrollPhysics(), // Tắt cuộn trong ListView
+                physics: const NeverScrollableScrollPhysics(), // Tắt cuộn trong ListView
                 itemBuilder: (context, index) {
                   final item = widget.product[index];
                   return Container(
@@ -142,19 +144,128 @@ class _PayState extends State<Pay> {
                             ),
                           ),
                           const SizedBox(height: 8),
-
                         ],
                       ),
                     ),
                   );
                 },
               ),
-              Text('Tổng tiền thanh toán: $total'),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: couponController,
+                        decoration: InputDecoration(
+                          hintText: 'Add Promo code',
+                          hintStyle: const TextStyle(
+                            fontSize: 16,
+                            color: Color(0xff32343E),
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Poppins',
+                          ),
+                          border: InputBorder.none, // Bỏ viền
+                          filled: true,
+                          fillColor: Colors.grey[200],
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10), // Điều chỉnh padding để căn chỉnh nội dung
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            borderSide: BorderSide.none, // Bỏ viền khi không focus
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            borderSide: BorderSide.none, // Bỏ viền khi có focus
+                          ),
+                        ),
+                      ),
+
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        String enteredCode = couponController.text.trim(); // Lấy giá trị từ TextField
+                        var matchingCoupon = controller.coupons.firstWhere(
+                              (coupon) => coupon['id'] == enteredCode,
+                          orElse: () => {}, // Trả về một map rỗng khi không tìm thấy
+                        );
+
+                        if (matchingCoupon.isNotEmpty) {
+                          // Nếu tìm thấy mã giảm giá
+                          print('Coupon found: ${matchingCoupon['coupon']} VND');
+                          setState(() {
+                            coupon = matchingCoupon['coupon'].toDouble();  // Cập nhật coupon khi tìm thấy
+                          });
+                        } else {
+                          // Nếu không tìm thấy mã giảm giá
+                          print('Invalid coupon code');
+                          setState(() {
+                            coupon = 0;  // Đặt lại coupon nếu không tìm thấy
+                          });
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: const Color(0xffFBFBFB),
+                        backgroundColor: const Color(0xffEF5350), // Màu chữ khi button được nhấn
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4), // Bo góc với bán kính 12
+                        ),
+                      ),
+                      child: const Text('Apply'),
+                    ),
+                  ],
+                ),
+              ),
+              _moneyToTal('Total', total1, const Color(0xff5B645F)),
+              _moneyToTal('Delivery fees', delivery, const Color(0xff5B645F)),
+              _moneyToTal('Promo', coupon, const Color(0xff5B645F)),
+              _moneyToTal('Total', total, const Color(0xff0D0D0D)),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                child: BasicAppButton(
+                    onPressed: (){
+                      Get.to(()=> SelectPayment());
+                    },
+                    title: 'Continue to payment', sizeTitle: 16, height: 62, radius: 12, colorButton: const Color(0xffFF7622), fontW: FontWeight.w500,),
+              )
             ],
           ),
         ),
       ),
     );
   }
-}
+  Widget _moneyToTal(String title, double number, Color colorTitle){
+    return Padding(
+      padding:  const EdgeInsets.symmetric(horizontal: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(title, style: TextStyle(
+            fontSize: 16,
+            color: colorTitle,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'Poppins',
+          ),),
+          Row(
+            children: [
+              Text(number.toString(), style: const TextStyle(
+                fontSize: 16,
+                color: Color(0xffA02334),
+                fontWeight: FontWeight.w400,
+                fontFamily: 'Poppins',
+              ),),
+              const SizedBox( width: 8,),
+              const Text('VND', style: TextStyle(
+                fontSize: 16,
+                color: Color(0xff1C1B1F),
+                fontWeight: FontWeight.w400,
+                fontFamily: 'Poppins',
+              ),),
+            ],
+          ),
 
+        ],
+      ),
+    );
+  }
+}

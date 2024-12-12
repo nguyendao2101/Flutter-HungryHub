@@ -331,6 +331,11 @@ class _HomeViewState extends State<HomeView> {
                     );
                   },
                   child: const TitleSeeMore(title: 'Chicken')),
+              InkWell(
+                onTap: (){
+
+                },
+                  child: Text('hi')),
               SizedBox(
                 height: 285, // Chiều cao cố định cho danh sách ngang
                 child: _isLoadingProducts
