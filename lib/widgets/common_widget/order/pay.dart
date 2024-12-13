@@ -23,6 +23,18 @@ class _PayState extends State<Pay> {
   double coupon = 0;  // Khai báo coupon là biến trạng thái
   double delivery = 30000;  // Khai báo coupon là biến trạng thái
 
+  //
+  List<Map<String, dynamic>> _stores = [];
+  String? _selectedStoreId;
+  bool _isLoadingStores = false;
+
+  @override
+  void initState() {
+    super.initState();
+    controller.fetchStores();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     double total1 = controller.calculateTotal(widget.product);  // Cập nhật tổng tiền với coupon
@@ -150,6 +162,8 @@ class _PayState extends State<Pay> {
                   );
                 },
               ),
+              // Chọn cửa hàng
+              const SizedBox(width: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
                 child: Row(
@@ -224,7 +238,8 @@ class _PayState extends State<Pay> {
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 child: BasicAppButton(
                     onPressed: (){
-                      Get.to(()=> SelectPayment());
+                      // Get.to(()=> SelectPayment());
+                      print('from store ${controller.fetchStores()}');
                     },
                     title: 'Continue to payment', sizeTitle: 16, height: 62, radius: 12, colorButton: const Color(0xffFF7622), fontW: FontWeight.w500,),
               )

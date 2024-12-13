@@ -8,7 +8,7 @@ import 'package:flutter_hungry_hub/widgets/common_widget/food_view/combo_view.da
 import 'package:flutter_hungry_hub/widgets/common_widget/food_view/drinks_and_desserts_view.dart';
 import 'package:get/get.dart';
 
-import '../view_model/test_view_model.dart';
+import '../view_model/get_data_viewmodel.dart';
 import '../widgets/common_widget/card/product_list_view_veri.dart';
 import '../widgets/common_widget/food_view/snacks_view.dart';
 import '../widgets/common_widget/text/title_see_more.dart';
@@ -22,7 +22,7 @@ class MenuView extends StatefulWidget {
 
 class _MenuViewState extends State<MenuView> {
   final controller = Get.put(MenuViewModel());
-  final controllerTestView = Get.put(TestViewModel());
+  final controllerTestView = Get.put(GetDataViewModel());
 
   List<Map<String, dynamic>> _products = [];
   List<Map<String, dynamic>> _stores = [];

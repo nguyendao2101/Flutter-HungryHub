@@ -3,7 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
-class TestViewModel extends GetxController {
+class GetDataViewModel extends GetxController {
   // Firestore instance
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 

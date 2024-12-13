@@ -12,6 +12,8 @@ class OrdersViewModel extends GetxController {
   final RxList<Map<String, dynamic>> coupons = <Map<String, dynamic>>[].obs;
   final RxList<Map<String, dynamic>> ordersList = <Map<String, dynamic>>[].obs;
   final RxList<int> selectedItems = <int>[].obs; // Danh sách index của các sản phẩm được chọn
+  final RxList<Map<String, dynamic>> stores = <Map<String, dynamic>>[].obs;
+
 
   final RxString userId = ''.obs;
 
@@ -21,7 +23,34 @@ class OrdersViewModel extends GetxController {
     _initializeUserId();
     _listenToOrders();
     fetchCoupons();
+    fetchStores();
   }
+
+  // Hàm lấy danh sách cửa hàng
+  Future<void> fetchStores() async {
+    try {
+      final QuerySnapshot snapshot =
+      await _firestore.collection('stores').get();
+      final fetchedStores = snapshot.docs
+          .map((doc) => {
+        'id': doc.id, // Lưu storeId
+        ...doc.data() as Map<String, dynamic>,
+      })
+          .toList();
+
+      // In ra các cửa hàng đã lấy được
+      print('Stores fetched:');
+      fetchedStores.forEach((store) {
+        print('Store ID: ${store['id']}, Store Data: $store');
+      });
+
+      // Gán danh sách cửa hàng vào biến stores
+      stores.assignAll(fetchedStores);
+    } catch (e) {
+      print('Error fetching stores: $e');
+    }
+  }
+
   // hàm lấy danh sách coupon
   Future<void> fetchCoupons() async {
     try {

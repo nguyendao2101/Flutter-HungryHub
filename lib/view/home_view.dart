@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hungry_hub/view_model/home_view_model.dart';
-import 'package:flutter_hungry_hub/view_model/test_view_model.dart';
+import 'package:flutter_hungry_hub/view_model/get_data_viewmodel.dart';
 import 'package:flutter_hungry_hub/widgets/common/image_extention.dart';
 import 'package:flutter_hungry_hub/widgets/common_widget/food_view/burger_view.dart';
 import 'package:flutter_hungry_hub/widgets/common_widget/food_view/chicken_view.dart';
@@ -23,7 +23,7 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   final controller = Get.put(HomeViewModel());
-  final controllerTestView = Get.put(TestViewModel());
+  final controllerTestView = Get.put(GetDataViewModel());
 
   List<Map<String, dynamic>> _products = [];
   List<Map<String, dynamic>> _stores = [];
@@ -331,11 +331,7 @@ class _HomeViewState extends State<HomeView> {
                     );
                   },
                   child: const TitleSeeMore(title: 'Chicken')),
-              InkWell(
-                onTap: (){
-
-                },
-                  child: Text('hi')),
+              InkWell(onTap: () {}, child: Text('hi')),
               SizedBox(
                 height: 285, // Chiều cao cố định cho danh sách ngang
                 child: _isLoadingProducts

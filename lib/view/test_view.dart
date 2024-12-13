@@ -1,7 +1,7 @@
 // ignore_for_file: unused_field, prefer_final_fields, avoid_print, use_build_context_synchronously, unnecessary_to_list_in_spreads
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hungry_hub/view_model/test_view_model.dart';
+import 'package:flutter_hungry_hub/view_model/get_data_viewmodel.dart';
 import 'package:get/get.dart';
 
 class TestView extends StatefulWidget {
@@ -12,7 +12,7 @@ class TestView extends StatefulWidget {
 }
 
 class _TestViewState extends State<TestView> {
-  final controller = Get.put(TestViewModel());
+  final controller = Get.put(GetDataViewModel());
   List<Map<String, dynamic>> _products = [];
   List<Map<String, dynamic>> _stores = [];
   String? _selectedProductId;
@@ -94,6 +94,7 @@ class _TestViewState extends State<TestView> {
         ));
       });
     }
+    print('cac mon co trong gio hang $product');
   }
 
   // Tính tổng tiền
@@ -228,44 +229,64 @@ class _TestViewState extends State<TestView> {
                 child: Column(
                   children: [
                     // Hiển thị các sản phẩm trong giỏ hàng
-                    ..._cart.map((item) {
-                      return ListTile(
-                        leading: Image.network(item.productImageUrl,
-                            width: 50, height: 50),
-                        title: Text(item.productName),
-                        subtitle: Text('Giá: ${item.productPrice} VND'),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.remove),
-                              onPressed: () {
-                                setStateDialog(() {
-                                  if (item.quantity > 1) {
-                                    item.quantity--;
-                                  } else {
-                                    _cart.remove(item);
-                                  }
-                                });
-                                // Cập nhật cả state của màn hình chính nếu cần
-                                setState(() {});
-                              },
-                            ),
-                            Text('${item.quantity}'),
-                            IconButton(
-                              icon: const Icon(Icons.add),
-                              onPressed: () {
-                                setStateDialog(() {
-                                  item.quantity++;
-                                });
-                                // Cập nhật cả state của màn hình chính nếu cần
-                                setState(() {});
-                              },
-                            ),
-                          ],
+                    if (_cart.isNotEmpty)
+                      ..._cart.map((item) {
+                        return ListTile(
+                          leading: Image.network(
+                            item.productImageUrl ?? '',
+                            width: 50,
+                            height: 50,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(Icons.image_not_supported);
+                            },
+                          ),
+                          title: Text(
+                            item.productName ?? 'Không xác định',
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                          subtitle: Text(
+                            'Giá: ${item.productPrice?.toString() ?? '0'} VND',
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.remove),
+                                onPressed: () {
+                                  setStateDialog(() {
+                                    if (item.quantity > 1) {
+                                      item.quantity--;
+                                    } else {
+                                      _cart.remove(item);
+                                    }
+                                  });
+                                  setState(
+                                      () {}); // Cập nhật state màn hình chính
+                                },
+                              ),
+                              Text('${item.quantity}'),
+                              IconButton(
+                                icon: const Icon(Icons.add),
+                                onPressed: () {
+                                  setStateDialog(() {
+                                    item.quantity++;
+                                  });
+                                  setState(
+                                      () {}); // Cập nhật state màn hình chính
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList()
+                    else
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text(
+                          'Giỏ hàng trống!',
+                          style: TextStyle(color: Colors.grey),
                         ),
-                      );
-                    }).toList(),
+                      ),
 
                     // Chọn cửa hàng
                     if (_stores.isNotEmpty)
@@ -294,13 +315,14 @@ class _TestViewState extends State<TestView> {
                       ),
 
                     // Hiển thị tổng tiền thanh toán
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Text(
-                        'Tổng tiền: ${getTotalPrice()} VND',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                    if (_cart.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Text(
+                          'Tổng tiền: ${getTotalPrice()} VND',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),
@@ -317,8 +339,7 @@ class _TestViewState extends State<TestView> {
                       : () async {
                           await _placeOrder();
                           setStateDialog(() {}); // Cập nhật state của dialog
-                          setState(
-                              () {}); // Cập nhật state của toàn màn hình nếu cần
+                          setState(() {}); // Cập nhật state của toàn màn hình
                         },
                   child: _isPlacingOrder
                       ? const CircularProgressIndicator()
@@ -367,7 +388,10 @@ class _TestViewState extends State<TestView> {
                         subtitle: Text('Giá: ${product['Price']} VND'),
                         trailing: IconButton(
                           icon: const Icon(Icons.add_shopping_cart),
-                          onPressed: () => _addToCart(product),
+                          onPressed: () {
+                            _addToCart(product);
+                            print('da them vao produc: $product');
+                          },
                         ),
                       );
                     },
