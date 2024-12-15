@@ -39,6 +39,7 @@ class _PayState extends State<Pay> {
   Widget build(BuildContext context) {
     double total1 = controller.calculateTotal(widget.product);  // Cập nhật tổng tiền với coupon
     double total = controller.calculateTotal(widget.product) - coupon + delivery;  // Cập nhật tổng tiền với coupon
+    final selectedStore = Rx<Map<String, dynamic>?>(null); // Lưu cửa hàng được chọn
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -234,15 +235,135 @@ class _PayState extends State<Pay> {
               _moneyToTal('Delivery fees', delivery, const Color(0xff5B645F)),
               _moneyToTal('Promo', coupon, const Color(0xff5B645F)),
               _moneyToTal('Total', total, const Color(0xff0D0D0D)),
+              const SizedBox(height: 20,),
+              Obx(() {
+                if (controller.stores.isEmpty) {
+                  return const Center(child: Text('No stores available.', style: TextStyle(
+                    fontSize: 16,
+                    color: Color(0xff32343E),
+                    fontWeight: FontWeight.w400,
+                    fontFamily: 'Poppins',
+                  ),));
+                }
+                final List<DropdownMenuItem<Map<String, dynamic>>> dropdownItems = controller.stores
+                    .where((store) {
+                  final List<dynamic> products = store['ListProducts'] ?? [];
+                  return widget.product.any((productSelect) =>
+                      products.any((product) => product['id'] == productSelect['id']));
+                })
+                    .map((store) => DropdownMenuItem<Map<String, dynamic>>(
+                  value: store,
+                  child: Text(store['Name'] ?? 'No Name', style: const TextStyle(
+                    fontSize: 16,
+                    color: Color(0xff32343E),
+                    fontWeight: FontWeight.w400,
+                    fontFamily: 'Poppins',
+                  ),),
+                ))
+                    .toList();
+
+                if (dropdownItems.isEmpty) {
+                  return const Center(child: Text('No stores match the selected products.'));
+                }
+
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      InputDecorator(
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          labelText: 'Select Store',
+                          labelStyle: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Poppins',
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(color: Colors.blue),
+                          ),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<Map<String, dynamic>>(
+                            value: selectedStore.value,
+                            items: dropdownItems,
+                            onChanged: (store) {
+                              selectedStore.value = store;
+                              print('Selected store: ${selectedStore.value}');
+                            },
+                            hint: const Text(
+                              'Select a store',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Color(0xff32343E),
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'Poppins',
+                              ),
+                            ),
+                            isExpanded: true,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Color(0xff32343E),
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Poppins',
+                            ),
+                            dropdownColor: Colors.white,
+                            icon: Image.asset(ImageAsset.downArrow, height: 18,),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+
+                      // const SizedBox(height: 16.0),
+                      // if (selectedStore.value != null)
+                      //   Column(
+                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                      //     children: [
+                      //       Text('Store Name: ${selectedStore.value!['Name'] ?? 'No Name'}', style: const TextStyle(
+                      //         fontSize: 16,
+                      //         color: Color(0xff32343E),
+                      //         fontWeight: FontWeight.w400,
+                      //         fontFamily: 'Poppins',
+                      //       ),),
+                      //       Text('Address: ${selectedStore.value!['Address'] ?? 'No Address'}', style: const TextStyle(
+                      //         fontSize: 16,
+                      //         color: Color(0xff32343E),
+                      //         fontWeight: FontWeight.w400,
+                      //         fontFamily: 'Poppins',
+                      //       ),),
+                      //       // const Text('Products:'),
+                      //       // ...?selectedStore.value!['ListProducts']?.map<Widget>((product) {
+                      //       //   return Text('- ${product['Name'] ?? 'No Name'}');
+                      //       // }).toList(),
+                      //     ],
+                      //   )
+                      // else
+                      //   const Text('No store selected.', style: TextStyle(
+                      //     fontSize: 16,
+                      //     color: Color(0xff32343E),
+                      //     fontWeight: FontWeight.w400,
+                      //     fontFamily: 'Poppins',
+                      //   ),),
+                    ],
+                  ),
+                );
+              }),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 child: BasicAppButton(
                     onPressed: (){
-                      // Get.to(()=> SelectPayment());
-                      print('from store ${controller.fetchStores()}');
+                      Get.to(()=> const SelectPayment());
+                      // print('from store ${controller.fetchStores()}');
                     },
                     title: 'Continue to payment', sizeTitle: 16, height: 62, radius: 12, colorButton: const Color(0xffFF7622), fontW: FontWeight.w500,),
-              )
+              ),
             ],
           ),
         ),

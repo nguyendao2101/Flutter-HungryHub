@@ -26,9 +26,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       // home: const MainNavView(initialIndex: 0),
-      // home: const MainLogoAppView(),
+      home: const MainLogoAppView(),
       // home: const AccessLocation(),x
-      home:  TestView(),
+      // home:  TestView(),
     );
   }
 }

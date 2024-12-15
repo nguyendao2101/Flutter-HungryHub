@@ -34,6 +34,7 @@ class ImageAsset{
   static String homeChicken = '$baseImagePathPNG/homeChicken.png';
   static String starRating = '$baseImagePathPNG/star_rating.png';
   static String star = '$baseImagePathPNG/star.png';
+  static String downArrow = '$baseImagePathPNG/down-arrow.png';
 
 
 
