@@ -35,6 +35,7 @@ class ImageAsset{
   static String starRating = '$baseImagePathPNG/star_rating.png';
   static String star = '$baseImagePathPNG/star.png';
   static String downArrow = '$baseImagePathPNG/down-arrow.png';
+  static String logOut = '$baseImagePathPNG/logout.png';
 
 
 
@@ -53,6 +54,14 @@ class ImageAsset{
   static String locationRed = '$baseImagesPathSVG/location_red$format';
   static String backButton = '$baseImagesPathSVG/back_button$format';
   static String more = '$baseImagesPathSVG/more$format';
+  static String profileMore = '$baseImagesPathSVG/profileMore$format';
+  static String arrowRight = '$baseImagesPathSVG/arrowRight$format';
+  static String cartPlus = '$baseImagesPathSVG/cartPlus$format';
+  static String favourist = '$baseImagesPathSVG/favourist$format';
+  static String GPS = '$baseImagesPathSVG/GPS$format';
+  static String notification = '$baseImagesPathSVG/notification$format';
+  static String personalInfo = '$baseImagesPathSVG/personalInfo$format';
+  static String wallet = '$baseImagesPathSVG/wallet$format';
 
   // static String searchHome = '$baseImagesPathSVG/search_home$format';
 

@@ -355,6 +355,7 @@ class _PayState extends State<Pay> {
                   ),
                 );
               }),
+
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 child: BasicAppButton(
