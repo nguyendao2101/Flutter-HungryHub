@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hungry_hub/view_model/profile_view_model.dart';
+import 'package:flutter_hungry_hub/widgets/common_widget/profile/persionnal_info.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
@@ -150,7 +151,11 @@ class _ProfileViewState extends State<ProfileView> {
                       padding: const EdgeInsets.only(top: 24, bottom: 15, left: 16, right: 20),
                       child: Column(
                         children: [
-                          FunctionProfile(image: ImageAsset.personalInfo, title: 'Personal Info',),
+                          GestureDetector(
+                            onTap: (){
+                              Get.to(()=> const PersonalInfo());
+                            },
+                              child: FunctionProfile(image: ImageAsset.personalInfo, title: 'Personal Info',)),
                           const SizedBox(height: 8,),
                           FunctionProfile(image: ImageAsset.GPS, title: 'Addresses',),
                           const SizedBox(height: 8,),
