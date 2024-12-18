@@ -188,48 +188,53 @@ class _ProfileViewState extends State<ProfileView> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 16),
-                child: Container(
-                  height: 70,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    color: const Color(0xffF0F0F0).withOpacity(0.6)
-                  ),
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 18, bottom: 15, left: 16, right: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                  height: 36,
-                                  width: 36,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape
-                                        .circle, // Đặt hình dạng của container là hình tròn
-                                    color: Color(0xffFFFFFF),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Image.asset(
-                                      ImageAsset.logOut,
+              GestureDetector(
+                onTap: (){
+                  controller.onLogout();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 16),
+                  child: Container(
+                    height: 70,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: const Color(0xffF0F0F0).withOpacity(0.6)
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 18, bottom: 15, left: 16, right: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                    height: 36,
+                                    width: 36,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape
+                                          .circle, // Đặt hình dạng của container là hình tròn
+                                      color: Color(0xffFFFFFF),
                                     ),
-                                  )),
-                              const SizedBox(width: 20,),
-                              const Text('Log Out', style: const TextStyle(
-                                fontSize: 15,
-                                color: Color(0xff111A2C),
-                                fontWeight: FontWeight.w400,
-                                fontFamily: 'Poppins',
-                              ),),
-                            ],
-                          ),
-                          SvgPicture.asset(ImageAsset.arrowRight),
-                        ],
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Image.asset(
+                                        ImageAsset.logOut,
+                                      ),
+                                    )),
+                                const SizedBox(width: 20,),
+                                const Text('Log Out', style: const TextStyle(
+                                  fontSize: 15,
+                                  color: Color(0xff111A2C),
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: 'Poppins',
+                                ),),
+                              ],
+                            ),
+                            SvgPicture.asset(ImageAsset.arrowRight),
+                          ],
+                        ),
                       ),
                     ),
                   ),

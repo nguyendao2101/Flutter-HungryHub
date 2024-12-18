@@ -3,6 +3,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
+import '../model/firebase/firebase_authencation.dart';
+
 class ProfileViewModel extends GetxController{
   late TextEditingController searchController = TextEditingController();
   final DatabaseReference _database = FirebaseDatabase.instance.ref();
@@ -32,6 +34,10 @@ class ProfileViewModel extends GetxController{
     } else {
       _userData.value = {};
     }
+  }
+  void onLogout() {
+    FirAuth firAuth = FirAuth(); // Tạo một thể hiện của FirAuth
+    firAuth.signOut(); // Gọi phương thức signOut từ thể hiện
   }
   @override
   void onClose() {
