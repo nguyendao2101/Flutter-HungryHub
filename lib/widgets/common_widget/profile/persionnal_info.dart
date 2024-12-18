@@ -41,7 +41,7 @@ class PersonalInfo extends StatelessWidget {
             ),
             const Spacer(),
             const Text(
-              'Persional Info',
+              'Personal Info',
               style: TextStyle(
                 fontSize: 24,
                 color: const Color(0xff32343E),
