@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 class OpenRouteService {
   final String apiKey =
-      '5b3ce3597851110001cf6248b33d75a4401a4482b62888d38a524ea4'; // Thay bằng API Key của bạn
+      '5b3ce3597851110001cf6248b33d75a4401a4482b62888d38a524ea4';
   final String baseUrl =
       'https://api.openrouteservice.org/v2/directions/driving-car';
 

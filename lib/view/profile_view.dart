@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hungry_hub/view_model/profile_view_model.dart';
+import 'package:flutter_hungry_hub/widgets/common_widget/profile/addresses.dart';
+import 'package:flutter_hungry_hub/widgets/common_widget/profile/favourite.dart';
+import 'package:flutter_hungry_hub/widgets/common_widget/profile/notification.dart';
+import 'package:flutter_hungry_hub/widgets/common_widget/profile/order_tracking.dart';
+import 'package:flutter_hungry_hub/widgets/common_widget/profile/payment_method.dart';
 import 'package:flutter_hungry_hub/widgets/common_widget/profile/persionnal_info.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -21,83 +26,15 @@ class _ProfileViewState extends State<ProfileView> {
     return  Scaffold(
       appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          title: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                        height: 36,
-                        width: 36,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape
-                              .circle, // Đặt hình dạng của container là hình tròn
-                          color: Color(0xffD9D9D9),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SvgPicture.asset(
-                            ImageAsset.backButton,
-                            height: 5,
-                            width: 6,
-                          ),
-                        )),
-                  ),
-                  const SizedBox(width: 10,),
-                  const Text('Profile', style: TextStyle(
-                    fontSize: 17,
-                    color: Color(0xff303030),
-                    fontWeight: FontWeight.w400,
-                    fontFamily: 'Poppins',
-                  ),)
-                ],
-              ),
-              Container(
-                width: 36, // Tăng kích thước để dễ nhấn hơn
-                height: 36,
-                decoration: const BoxDecoration(
-                  shape: BoxShape
-                      .circle, // Đặt hình dạng của container là hình tròn
-                  color: Color(0xffD9D9D9),
-                ),
-                child: Center(
-                  child: PopupMenuButton<int>(
-                    color: Colors.white,
-                    offset: const Offset(-10, 15),
-                    elevation: 1,
-                    icon: SvgPicture.asset(
-                      ImageAsset.profileMore,
-                      width: 24,
-                      height: 24,
-                    ),
-                    padding: EdgeInsets.zero,
-                    itemBuilder: (context) {
-                      return [
-                        PopupMenuItem(
-                          value: 1,
-                          height: 30,
-                          child: InkWell(
-                            onTap: () {},
-                            child: const Text(
-                              "Report",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Color(0xff32343E),
-                                fontWeight: FontWeight.w500,
-                                fontFamily: 'Poppins',
-                              ),
-                            ),
-                          ),
-                        ),
-                      ];
-                    },
-                  ),
-                ),
-              )
+              Text('Profile', style: TextStyle(
+                fontSize: 24,
+                color: Color(0xff303030),
+                fontWeight: FontWeight.w400,
+                fontFamily: 'Poppins',
+              ),)
             ],
           )),
       body: SingleChildScrollView(
@@ -157,9 +94,17 @@ class _ProfileViewState extends State<ProfileView> {
                             },
                               child: FunctionProfile(image: ImageAsset.personalInfo, title: 'Personal Info',)),
                           const SizedBox(height: 8,),
-                          FunctionProfile(image: ImageAsset.GPS, title: 'Addresses',),
+                          GestureDetector(
+                            onTap: (){
+                              Get.to(()=> const Addresses());
+                            },
+                              child: FunctionProfile(image: ImageAsset.GPS, title: 'Addresses',)),
                           const SizedBox(height: 8,),
-                          FunctionProfile(image: ImageAsset.GPS, title: 'Order tracking',),
+                          GestureDetector(
+                              onTap: (){
+                                Get.to(()=> const OrderTracking());
+                              },
+                              child: FunctionProfile(image: ImageAsset.GPS, title: 'Order tracking',)),
                         ],
                       ),
                     ),
@@ -180,13 +125,29 @@ class _ProfileViewState extends State<ProfileView> {
                       padding: const EdgeInsets.only(top: 24, bottom: 15, left: 16, right: 20),
                       child: Column(
                         children: [
-                          FunctionProfile(image: ImageAsset.cartPlus, title: 'Cart',),
+                          GestureDetector(
+                              onTap: (){
+                                Get.to(()=> const Card());
+                              },
+                              child: FunctionProfile(image: ImageAsset.cartPlus, title: 'Cart',)),
                           const SizedBox(height: 8,),
-                          FunctionProfile(image: ImageAsset.favourist, title: 'Favourite',),
+                          GestureDetector(
+                              onTap: (){
+                                  Get.to(()=> const Favourite());
+                              },
+                              child: FunctionProfile(image: ImageAsset.favourist, title: 'Favourite',)),
                           const SizedBox(height: 8,),
-                          FunctionProfile(image: ImageAsset.notification, title: 'Notification',),
+                          GestureDetector(
+                              onTap: (){
+                                Get.to(()=>  const NotificationPro());
+                              },
+                              child: FunctionProfile(image: ImageAsset.notification, title: 'Notification',)),
                           const SizedBox(height: 8,),
-                          FunctionProfile(image: ImageAsset.wallet, title: 'Payment Method',),
+                          GestureDetector(
+                              onTap: (){
+                                Get.to(()=> const PaymentMethod());
+                              },
+                              child: FunctionProfile(image: ImageAsset.wallet, title: 'Payment Method',)),
                         ],
                       ),
                     ),

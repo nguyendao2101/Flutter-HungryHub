@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 import '../../common/image_extention.dart';
+import 'app_bar_profile.dart';
 
 class PersonalInfo extends StatelessWidget {
   const PersonalInfo({super.key});
@@ -13,46 +14,7 @@ class PersonalInfo extends StatelessWidget {
     final controller = Get.put(ProfileViewModel());
 
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Container(
-                height: 36,
-                width: 36,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xffD9D9D9),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SvgPicture.asset(
-                    ImageAsset.backButton,
-                    height: 5,
-                    width: 6,
-                  ),
-                ),
-              ),
-            ),
-            const Spacer(),
-            const Text(
-              'Personal Info',
-              style: TextStyle(
-                fontSize: 24,
-                color: const Color(0xff32343E),
-                fontWeight: FontWeight.w500,
-                fontFamily: 'Poppins',
-              ),
-            ),
-            const Spacer(),
-          ],
-        ),
-      ),
+      appBar: AppBarProfile(title: 'Perisonal Info'),
       body: SingleChildScrollView(
         child: Column(
           children: [
