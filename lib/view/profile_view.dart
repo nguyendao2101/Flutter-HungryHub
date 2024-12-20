@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hungry_hub/view/main_nav_view.dart';
+import 'package:flutter_hungry_hub/view/orders_view.dart';
 import 'package:flutter_hungry_hub/view_model/profile_view_model.dart';
 import 'package:flutter_hungry_hub/widgets/common_widget/profile/addresses.dart';
 import 'package:flutter_hungry_hub/widgets/common_widget/profile/favourite.dart';
@@ -127,7 +129,8 @@ class _ProfileViewState extends State<ProfileView> {
                         children: [
                           GestureDetector(
                               onTap: (){
-                                Get.to(()=> const Card());
+                                print('da nhan');
+                                Get.to(()=> OrdersView());
                               },
                               child: FunctionProfile(image: ImageAsset.cartPlus, title: 'Cart',)),
                           const SizedBox(height: 8,),
