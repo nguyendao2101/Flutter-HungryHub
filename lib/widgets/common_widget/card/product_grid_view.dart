@@ -113,10 +113,10 @@ class ProductGridView extends StatelessWidget {
                     children: [
                       Evaluate(height: 24, width: 71),
                       Text(
-                        ' • 32 min',
+                        ' • FreeShip',
                         style: TextStyle(
                           fontSize: 16,
-                          color: Colors.black,
+                          color: Color(0xffEF5350),
                           fontWeight: FontWeight.w500,
                           fontFamily: 'Poppins',
                         ),
