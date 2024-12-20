@@ -1,10 +1,8 @@
-// ignore_for_file: use_super_parameters
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hungry_hub/view_model/home_view_model.dart';
+import 'package:flutter_hungry_hub/widgets/common_widget/evaluate/evaluate.dart';
 import 'package:get/get.dart';
 import '../../common/image_extention.dart';
-import '../evaluate/evaluate.dart';
 import '../food_detail/food_detail.dart';
 import '../text/truncated_text.dart';
 
@@ -16,6 +14,7 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(HomeViewModel());
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -34,14 +33,54 @@ class ProductCard extends StatelessWidget {
         ),
         child: Column(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: Image.network(
-                product['ImageUrl'] ?? '',
-                width: 201,
-                height: 170,
-                fit: BoxFit.fill,
-              ),
+            Stack(
+              children: [
+                // Product Image
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Image.network(
+                    product['ImageUrl'] ?? '',
+                    width: 201,
+                    height: 170,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+                // Favorite Icon
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: GestureDetector(
+                    onTap: () {
+                      controller.toggleFavorite(product);
+                    },
+                    child: Obx(
+                          () => Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200], // Màu nền xám nhạt
+                          shape: BoxShape.circle,  // Hình tròn
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 4,
+                              offset: Offset(0, 2), // Đổ bóng nhẹ
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.all(6), // Khoảng cách bên trong
+                        child: Icon(
+                          controller.isFavorite(product)
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: controller.isFavorite(product)
+                              ? Colors.red
+                              : Colors.grey,
+                          size: 24, // Kích thước icon
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             Padding(
               padding: const EdgeInsets.all(4),
@@ -73,6 +112,7 @@ class ProductCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Evaluate(height: 24, width: 71),
                   const Text(

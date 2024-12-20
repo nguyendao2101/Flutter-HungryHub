@@ -32,14 +32,52 @@ class ProductGridView extends StatelessWidget {
           ),
           child: Column(
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: Image.network(
-                  product['ImageUrl'] ?? '',
-                  width: double.infinity,
-                  height: 95,
-                  fit: BoxFit.fill,
-                ),
+              Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: Image.network(
+                      product['ImageUrl'] ?? '',
+                      width: double.infinity,
+                      height: 95,
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: GestureDetector(
+                      onTap: () {
+                        controller.toggleFavorite(product);
+                      },
+                      child: Obx(
+                            () => Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200], // Màu nền xám nhạt
+                            shape: BoxShape.circle,  // Hình tròn
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 4,
+                                offset: Offset(0, 2), // Đổ bóng nhẹ
+                              ),
+                            ],
+                          ),
+                          padding: const EdgeInsets.all(6), // Khoảng cách bên trong
+                          child: Icon(
+                            controller.isFavorite(product)
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color: controller.isFavorite(product)
+                                ? Colors.red
+                                : Colors.grey,
+                            size: 24, // Kích thước icon
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               Padding(
                 padding: const EdgeInsets.all(4),
