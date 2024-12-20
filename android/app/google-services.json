@@ -1,10 +1,30 @@
 {
   "project_info": {
     "project_number": "584532754502",
+    "firebase_url": "https://flutter-hungryhub-default-rtdb.firebaseio.com",
     "project_id": "flutter-hungryhub",
     "storage_bucket": "flutter-hungryhub.firebasestorage.app"
   },
   "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:584532754502:android:1e9a276fc70155e0e30a47",
+        "android_client_info": {
+          "package_name": "com.example.ban_ga"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZQi_9_7Im07VHVeLoGCZmfeLiu-x-W7s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
     {
       "client_info": {
         "mobilesdk_app_id": "1:584532754502:android:2b796bad7900fd72e30a47",

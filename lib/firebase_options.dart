@@ -54,6 +54,7 @@ class DefaultFirebaseOptions {
     appId: '1:584532754502:android:2b796bad7900fd72e30a47',
     messagingSenderId: '584532754502',
     projectId: 'flutter-hungryhub',
+    databaseURL: 'https://flutter-hungryhub-default-rtdb.firebaseio.com',
     storageBucket: 'flutter-hungryhub.firebasestorage.app',
   );
 
@@ -62,7 +63,9 @@ class DefaultFirebaseOptions {
     appId: '1:584532754502:ios:387ea70d54369d6ce30a47',
     messagingSenderId: '584532754502',
     projectId: 'flutter-hungryhub',
+    databaseURL: 'https://flutter-hungryhub-default-rtdb.firebaseio.com',
     storageBucket: 'flutter-hungryhub.firebasestorage.app',
     iosBundleId: 'com.example.flutterHungryHub',
   );
+
 }
