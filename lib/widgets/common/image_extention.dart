@@ -36,6 +36,8 @@ class ImageAsset{
   static String star = '$baseImagePathPNG/star.png';
   static String downArrow = '$baseImagePathPNG/down-arrow.png';
   static String logOut = '$baseImagePathPNG/logout.png';
+  static String money = '$baseImagePathPNG/money.png';
+  static String stripe = '$baseImagePathPNG/stripe.png';
 
 
 
@@ -62,6 +64,7 @@ class ImageAsset{
   static String notification = '$baseImagesPathSVG/notification$format';
   static String personalInfo = '$baseImagesPathSVG/personalInfo$format';
   static String wallet = '$baseImagesPathSVG/wallet$format';
+  static String vnpay = '$baseImagesPathSVG/vnpay$format';
 
   // static String searchHome = '$baseImagesPathSVG/search_home$format';
 

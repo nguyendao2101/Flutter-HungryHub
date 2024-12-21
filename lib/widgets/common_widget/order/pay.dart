@@ -31,7 +31,13 @@ class _PayState extends State<Pay> {
   String? _selectedStoreId;
   bool _isLoadingStores = false;
   String? selectedLocation; // Lưu địa chỉ được chọn
+  var selectedPaymentMethod = Rxn<Map<String, String>>();
 
+  final List<Map<String, String>> paymentMethods = [
+    {'id': '1', 'name': 'Cash on Delivery'},
+    {'id': '2', 'name': 'Payment via VNPay'},
+    {'id': '3', 'name': 'Payment via Stripe'},
+  ];
 
   @override
   void initState() {
@@ -241,6 +247,101 @@ class _PayState extends State<Pay> {
               _moneyToTal('Promo', coupon, const Color(0xff5B645F)),
               _moneyToTal('Total', total, const Color(0xff0D0D0D)),
               const SizedBox(height: 20,),
+              FutureBuilder<Map<String, String>>(
+                future: controller.fetchLocationsFromFirebase(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        'Lỗi khi tải dữ liệu: ${snapshot.error}',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    );
+                  } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                    final Map<String, String> locations = snapshot.data!;
+
+                    // Tạo danh sách DropdownMenuItem từ dữ liệu
+                    final dropdownItems = locations.entries
+                        .map((entry) => DropdownMenuItem<String>(
+                      value: entry.key, // ID địa chỉ làm giá trị
+                      child: Text(
+                        entry.value, // Tên địa chỉ hiển thị
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ))
+                        .toList();
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          InputDecorator(
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              labelText: 'Select Address',  // Thay 'Select Store' bằng 'Chọn địa chỉ'
+                              labelStyle: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'Poppins',
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(color: Colors.blue),
+                              ),
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                value: selectedLocation,
+                                hint: const Text(
+                                  'Select Address',  // Thay 'Select a store' bằng 'Chọn địa chỉ'
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Color(0xff32343E),
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'Poppins',
+                                  ),
+                                ),
+                                isExpanded: true,  // Đảm bảo nút dropdown chiếm toàn bộ chiều ngang
+                                items: dropdownItems,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedLocation = newValue;
+                                  });
+
+                                  // In ra giá trị được chọn
+                                  print('Địa chỉ được chọn: $newValue');
+                                },
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Color(0xff32343E),
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: 'Poppins',
+                                ),
+                                icon: Image.asset(ImageAsset.downArrow, height: 18,),
+                              ),
+                            ),
+                          )
+
+                        ],
+                      ),
+                    );
+                  } else {
+                    return const Center(child: Text('Không có địa chỉ nào.'));
+                  }
+                },
+              ),
               Obx(() {
                 if (controller.stores.isEmpty) {
                   return const Center(child: Text('No stores available.', style: TextStyle(
@@ -360,99 +461,90 @@ class _PayState extends State<Pay> {
                   ),
                 );
               }),
-              FutureBuilder<Map<String, String>>(
-                future: controller.fetchLocationsFromFirebase(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Text(
-                        'Lỗi khi tải dữ liệu: ${snapshot.error}',
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    );
-                  } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                    final Map<String, String> locations = snapshot.data!;
+              Obx(() {
+                // Tạo danh sách các mục Dropdown
+                final List<DropdownMenuItem<Map<String, String>>> dropdownItems = paymentMethods
+                    .map((method) => DropdownMenuItem<Map<String, String>>(
+                  value: method,
+                  child: Text(
+                    method['name']!,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Color(0xff32343E),
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Poppins',
+                    ),
+                  ),
+                ))
+                    .toList();
 
-                    // Tạo danh sách DropdownMenuItem từ dữ liệu
-                    final dropdownItems = locations.entries
-                        .map((entry) => DropdownMenuItem<String>(
-                      value: entry.key, // ID địa chỉ làm giá trị
-                      child: Text(
-                        entry.value, // Tên địa chỉ hiển thị
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black87,
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      InputDecorator(
+                        decoration: InputDecoration(
+                          contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          labelText: 'Select Payment Method',
+                          labelStyle: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Poppins',
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(color: Colors.blue),
+                          ),
                         ),
-                      ),
-                    ))
-                        .toList();
-
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          InputDecorator(
-                            decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                              labelText: 'Select Address',  // Thay 'Select Store' bằng 'Chọn địa chỉ'
-                              labelStyle: const TextStyle(
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<Map<String, String>>(
+                            value: selectedPaymentMethod.value,
+                            items: dropdownItems,
+                            onChanged: (method) {
+                              selectedPaymentMethod.value = method;
+                              print('Selected payment method: ${method!['name']}');
+                            },
+                            hint: const Text(
+                              'Select Payment Method',
+                              style: TextStyle(
                                 fontSize: 16,
-                                color: Colors.grey,
+                                color: Color(0xff32343E),
                                 fontWeight: FontWeight.w400,
                                 fontFamily: 'Poppins',
                               ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(color: Colors.grey),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(color: Colors.blue),
-                              ),
                             ),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                value: selectedLocation,
-                                hint: const Text(
-                                  'Select Address',  // Thay 'Select a store' bằng 'Chọn địa chỉ'
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Color(0xff32343E),
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Poppins',
-                                  ),
-                                ),
-                                isExpanded: true,  // Đảm bảo nút dropdown chiếm toàn bộ chiều ngang
-                                items: dropdownItems,
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    selectedLocation = newValue;
-                                  });
-
-                                  // In ra giá trị được chọn
-                                  print('Địa chỉ được chọn: $newValue');
-                                },
-                                style: const TextStyle(
-                                  color: Colors.black87,
-                                  fontSize: 16,
-                                ),
-                                icon: Image.asset(ImageAsset.downArrow, height: 18,),
-                              ),
+                            isExpanded: true,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Color(0xff32343E),
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Poppins',
                             ),
-                          )
-
-                        ],
+                            dropdownColor: Colors.white,
+                            icon: selectedPaymentMethod.value?['id'] == '1'
+                                ? Image.asset(ImageAsset.money) // Thanh toán khi nhận hàng
+                                : selectedPaymentMethod.value?['id'] == '2'
+                                ? SvgPicture.asset(ImageAsset.vnpay, height: 48,) // Thanh toán VNPay
+                                : selectedPaymentMethod.value?['id'] == '3'
+                                ? Image.asset(ImageAsset.stripe, height: 48,) // Thanh toán Stripe
+                                : const Icon(Icons.payment, color: Colors.grey), // Mặc định
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
                       ),
-                    );
-                  } else {
-                    return const Center(child: Text('Không có địa chỉ nào.'));
-                  }
-                },
-              ),
+
+                      const SizedBox(height: 16.0),
+                    ],
+                  ),
+                );
+              }),
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -464,16 +556,6 @@ class _PayState extends State<Pay> {
                     title: 'Continue to payment', sizeTitle: 16, height: 62, radius: 12, colorButton: const Color(0xffFF7622), fontW: FontWeight.w500,),
               ),
 
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                child: BasicAppButton(
-                    onPressed: (){
-                      // Get.to(()=> const SelectPayment());
-                      Get.to(()=>  LocationScreen());
-                      // print('from store ${controller.fetchStores()}');
-                    },
-                    title: 'Continue', sizeTitle: 16, height: 62, radius: 12, colorButton: const Color(0xffFF7622), fontW: FontWeight.w500,),
-              ),
             ],
           ),
         ),
