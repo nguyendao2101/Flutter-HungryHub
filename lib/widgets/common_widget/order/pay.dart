@@ -8,6 +8,7 @@ import 'package:flutter_hungry_hub/widgets/common_widget/order/select_payment.da
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:vnpay_flutter/vnpay_flutter.dart';
 
 import '../../../view/test.dart';
 import '../evaluate/evaluate.dart';
@@ -39,6 +40,8 @@ class _PayState extends State<Pay> {
     {'id': '2', 'name': 'Payment via VNPay'},
     {'id': '3', 'name': 'Payment via Stripe'},
   ];
+  String responseCode = '';
+
 
   @override
   void initState() {
@@ -551,7 +554,14 @@ class _PayState extends State<Pay> {
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 child: BasicAppButton(
                     onPressed: (){
-                      _showPaymentMethod(context, selectedPaymentMethod);
+                      if(selectedPaymentMethod.value?['id'] == '2'){
+                        onPayment(total);
+                        _showPaymentMethod(context, selectedPaymentMethod);
+                      } else if(selectedPaymentMethod.value?['id'] == '3'){
+                        _showPaymentMethod(context, selectedPaymentMethod);
+                      } else {
+                        _showPaymentMethod(context, selectedPaymentMethod);
+                      }
                     },
                     title: 'Continue to payment', sizeTitle: 16, height: 62, radius: 12, colorButton: const Color(0xffFF7622), fontW: FontWeight.w500,),
               ),
@@ -674,12 +684,89 @@ class _PayState extends State<Pay> {
                         ],
                       ),
                     ),
+                  if (selectedPaymentMethod.value?['id'] == '2')
+                    Align(
+                      alignment: Alignment.center,
+                      child: Column(
+                        children: [
+                          // Add a check icon for visual confirmation
+                          const SizedBox(height: 24),
+                          Image.asset(responseCode == '00' ? ImageAsset.check : ImageAsset.remove, height: 125,),
+                          const SizedBox(height: 64),
+
+                          const Text(
+                            'Your order has been confirmed by HungruHub.',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Poppins',
+                              color: Colors.black87,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 48),
+                          // Button to go to Order Tracking
+                          TextButton(
+                            onPressed: () {
+                              Get.to(() => const OrderTracking());
+                            },
+                            child: const Text(
+                              'Order Tracking',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                            ),
+                            style: TextButton.styleFrom(
+                              backgroundColor: const Color(0xffE03137),
+                              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 40),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   const SizedBox(height: 16),
                 ],
               ),
             ),
           ),
         );
+      },
+    );
+  }
+  Future<void> onPayment(double amount) async {
+    final paymentUrl = VNPAYFlutter.instance.generatePaymentUrl(
+      url: 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html', //vnpay url, default is https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+      version: '2.0.1',
+      tmnCode: 'YLLVXBWY', //vnpay tmn code, get from vnpay
+      txnRef: DateTime.now().millisecondsSinceEpoch.toString(),
+      orderInfo: 'Pay $amount VND', //order info
+      amount: amount, // Sử dụng amount từ tham số truyền vào
+      returnUrl: 'https://sandbox.vnpayment.vn/merchant_webapi/api/transaction', //https://sandbox.vnpayment.vn/apis/docs/huong-dan-tich-hop/#code-returnurl
+      ipAdress: '192.168.10.10',
+      vnpayHashKey: '1J9MHQHA5NK9C4J3D26CZO1HAPO02IJY', //vnpay hash key, get from vnpay
+      vnPayHashType: VNPayHashType.HMACSHA512, //hash type. Default is HMACSHA512, you can chang it in: https://sandbox.vnpayment.vn/merchantv2,
+      vnpayExpireDate: DateTime.now().add(const Duration(hours: 1)),
+    );
+    await VNPAYFlutter.instance.show(
+      paymentUrl: paymentUrl,
+      onPaymentSuccess: (params) {
+        setState(() {
+          responseCode = params['vnp_ResponseCode'] ?? 'No Response Code';
+        });
+        // Print the response to the console
+        print('Payment Success: $params');
+      },
+      onPaymentError: (params) {
+        setState(() {
+          responseCode = 'Error';
+        });
+        // Print the error to the console
+        print('Payment Error: $params');
       },
     );
   }

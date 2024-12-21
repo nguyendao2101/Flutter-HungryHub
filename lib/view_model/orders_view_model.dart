@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:vnpay_flutter/vnpay_flutter.dart';
 
 class OrdersViewModel extends GetxController {
   //firebase realtime
@@ -171,7 +172,5 @@ class OrdersViewModel extends GetxController {
     }
     return total;
   }
-
-
 
 }
