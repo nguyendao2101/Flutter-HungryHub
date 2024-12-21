@@ -45,7 +45,7 @@ class _AccessLocationState extends State<AccessLocation> {
           await LocationService().getCurrentLocationAndAddress();
 
       // Ghi dữ liệu vị trí vào Firebase Realtime Database
-      await _database.child('users/$userId/location').set(locationData);
+      await _database.child('users/$userId/AddAdress/location').set(locationData);
 
       setState(() {
         location = locationData;

@@ -18,6 +18,8 @@ class ProfileViewModel extends GetxController{
     _initializeUserId();
   }
 
+
+
   void _initializeUserId() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
