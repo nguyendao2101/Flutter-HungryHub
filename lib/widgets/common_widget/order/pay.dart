@@ -11,6 +11,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 import '../../../view/test.dart';
 import '../evaluate/evaluate.dart';
+import '../profile/order_tracking.dart';
 
 class Pay extends StatefulWidget {
   List<Map<String, dynamic>> product;
@@ -550,8 +551,7 @@ class _PayState extends State<Pay> {
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 child: BasicAppButton(
                     onPressed: (){
-                      Get.to(()=> const SelectPayment());
-                      // print('from store ${controller.fetchStores()}');
+                      _showPaymentMethod(context, selectedPaymentMethod);
                     },
                     title: 'Continue to payment', sizeTitle: 16, height: 62, radius: 12, colorButton: const Color(0xffFF7622), fontW: FontWeight.w500,),
               ),
@@ -594,6 +594,93 @@ class _PayState extends State<Pay> {
 
         ],
       ),
+    );
+  }
+  void _showPaymentMethod(BuildContext context, Rxn<Map<String, String>> selectedPaymentMethod) {
+    showModalBottomSheet(
+      context: context,
+      barrierColor: Colors.grey.withOpacity(0.8),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      isDismissible: true,
+      isScrollControlled: true,
+      builder: (context) {
+        return FractionallySizedBox(
+          heightFactor: 0.8,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: 16,
+                right: 16,
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Payment Confirmation',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Poppins',
+                      color: Color(0xff32343E),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  if (selectedPaymentMethod.value?['id'] == '1')
+                    Align(
+                      alignment: Alignment.center,
+                      child: Column(
+                        children: [
+                          // Add a check icon for visual confirmation
+                          const SizedBox(height: 24),
+                          Image.asset(ImageAsset.check, height: 128,),
+                          const SizedBox(height: 64),
+
+                          const Text(
+                            'Your order has been confirmed by HungruHub.',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Poppins',
+                              color: Colors.black87,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 48),
+                          // Button to go to Order Tracking
+                          TextButton(
+                            onPressed: () {
+                              Get.to(() => const OrderTracking());
+                            },
+                            child: const Text(
+                              'Order Tracking',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                            ),
+                            style: TextButton.styleFrom(
+                              backgroundColor: const Color(0xffE03137),
+                              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 40),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

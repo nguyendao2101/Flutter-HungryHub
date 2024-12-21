@@ -38,6 +38,7 @@ class ImageAsset{
   static String logOut = '$baseImagePathPNG/logout.png';
   static String money = '$baseImagePathPNG/money.png';
   static String stripe = '$baseImagePathPNG/stripe.png';
+  static String check = '$baseImagePathPNG/check.png';
 
 
 
