@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class OrdersViewModel extends GetxController {
@@ -11,6 +12,7 @@ class OrdersViewModel extends GetxController {
 
   final RxList<Map<String, dynamic>> coupons = <Map<String, dynamic>>[].obs;
   final RxList<Map<String, dynamic>> ordersList = <Map<String, dynamic>>[].obs;
+  final RxList<Map<String, dynamic>> addressList = <Map<String, dynamic>>[].obs;
   final RxList<int> selectedItems = <int>[].obs; // Danh sách index của các sản phẩm được chọn
   final RxList<Map<String, dynamic>> stores = <Map<String, dynamic>>[].obs;
 
@@ -24,6 +26,7 @@ class OrdersViewModel extends GetxController {
     _listenToOrders();
     fetchCoupons();
     fetchStores();
+    fetchLocationsFromFirebase();
   }
 
   // Hàm lấy danh sách cửa hàng
@@ -98,6 +101,28 @@ class OrdersViewModel extends GetxController {
       }
     });
   }
+  Future<Map<String, String>> fetchLocationsFromFirebase() async {
+    try {
+      User? currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser == null) {
+        throw Exception("No user is signed in.");
+      }
+
+      String userId = currentUser.uid;
+      DataSnapshot snapshot = await _databaseReference.child('users/$userId/AddAdress').get();
+
+      if (snapshot.exists && snapshot.value is Map<dynamic, dynamic>) {
+        Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
+        return data.map((key, value) => MapEntry(key.toString(), value.toString()));
+      } else {
+        debugPrint("No valid data found for locations.");
+      }
+    } catch (e) {
+      debugPrint("Error fetching locations: $e");
+    }
+    return {}; // Trả về Map rỗng khi không có dữ liệu
+  }
+
 
   void selectItem(int index) {
     selectedItems.add(index); // Thêm sản phẩm vào danh sách đã chọn
@@ -146,6 +171,7 @@ class OrdersViewModel extends GetxController {
     }
     return total;
   }
+
 
 
 }

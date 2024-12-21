@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hungry_hub/view_model/orders_view_model.dart';
 import 'package:flutter_hungry_hub/widgets/common/image_extention.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
+import '../../../view/test.dart';
 import '../evaluate/evaluate.dart';
 
 class Pay extends StatefulWidget {
@@ -27,6 +30,8 @@ class _PayState extends State<Pay> {
   List<Map<String, dynamic>> _stores = [];
   String? _selectedStoreId;
   bool _isLoadingStores = false;
+  String? selectedLocation; // Lưu địa chỉ được chọn
+
 
   @override
   void initState() {
@@ -34,12 +39,12 @@ class _PayState extends State<Pay> {
     controller.fetchStores();
   }
 
-
   @override
   Widget build(BuildContext context) {
     double total1 = controller.calculateTotal(widget.product);  // Cập nhật tổng tiền với coupon
     double total = controller.calculateTotal(widget.product) - coupon + delivery;  // Cập nhật tổng tiền với coupon
     final selectedStore = Rx<Map<String, dynamic>?>(null); // Lưu cửa hàng được chọn
+    final selectedAddress = Rx<Map<String, dynamic>?>(null); // Lưu cửa hàng được chọn
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -355,6 +360,99 @@ class _PayState extends State<Pay> {
                   ),
                 );
               }),
+              FutureBuilder<Map<String, String>>(
+                future: controller.fetchLocationsFromFirebase(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        'Lỗi khi tải dữ liệu: ${snapshot.error}',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    );
+                  } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                    final Map<String, String> locations = snapshot.data!;
+
+                    // Tạo danh sách DropdownMenuItem từ dữ liệu
+                    final dropdownItems = locations.entries
+                        .map((entry) => DropdownMenuItem<String>(
+                      value: entry.key, // ID địa chỉ làm giá trị
+                      child: Text(
+                        entry.value, // Tên địa chỉ hiển thị
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ))
+                        .toList();
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          InputDecorator(
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              labelText: 'Select Address',  // Thay 'Select Store' bằng 'Chọn địa chỉ'
+                              labelStyle: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'Poppins',
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(color: Colors.blue),
+                              ),
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                value: selectedLocation,
+                                hint: const Text(
+                                  'Select Address',  // Thay 'Select a store' bằng 'Chọn địa chỉ'
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Color(0xff32343E),
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'Poppins',
+                                  ),
+                                ),
+                                isExpanded: true,  // Đảm bảo nút dropdown chiếm toàn bộ chiều ngang
+                                items: dropdownItems,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedLocation = newValue;
+                                  });
+
+                                  // In ra giá trị được chọn
+                                  print('Địa chỉ được chọn: $newValue');
+                                },
+                                style: const TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 16,
+                                ),
+                                icon: Image.asset(ImageAsset.downArrow, height: 18,),
+                              ),
+                            ),
+                          )
+
+                        ],
+                      ),
+                    );
+                  } else {
+                    return const Center(child: Text('Không có địa chỉ nào.'));
+                  }
+                },
+              ),
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -364,6 +462,17 @@ class _PayState extends State<Pay> {
                       // print('from store ${controller.fetchStores()}');
                     },
                     title: 'Continue to payment', sizeTitle: 16, height: 62, radius: 12, colorButton: const Color(0xffFF7622), fontW: FontWeight.w500,),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                child: BasicAppButton(
+                    onPressed: (){
+                      // Get.to(()=> const SelectPayment());
+                      Get.to(()=>  LocationScreen());
+                      // print('from store ${controller.fetchStores()}');
+                    },
+                    title: 'Continue', sizeTitle: 16, height: 62, radius: 12, colorButton: const Color(0xffFF7622), fontW: FontWeight.w500,),
               ),
             ],
           ),
