@@ -37,6 +37,26 @@ class ProfileViewModel extends GetxController{
       _userData.value = {};
     }
   }
+
+  Future<void> transferUserDataToBrowseShop() async {
+    // Lấy thông tin người dùng từ nhánh 'users/$_userId'
+    DatabaseReference userRef = _database.child('users/$_userId');
+    DataSnapshot userSnapshot = await userRef.get();
+
+    if (userSnapshot.exists) {
+      // Lấy dữ liệu từ userSnapshot
+      Map<String, dynamic> userData = Map<String, dynamic>.from(userSnapshot.value as Map);
+
+      // Lưu thông tin vào nhánh 'browseShop/$_userId'
+      DatabaseReference browseShopRef = _database.child('browseShop/$_userId');
+      await browseShopRef.set(userData); // Lưu dữ liệu vào 'browseShop'
+
+      print("User data transferred to browseShop.");
+    } else {
+      print("No user data found to transfer.");
+    }
+  }
+
   void onLogout() {
     FirAuth firAuth = FirAuth(); // Tạo một thể hiện của FirAuth
     firAuth.signOut(); // Gọi phương thức signOut từ thể hiện

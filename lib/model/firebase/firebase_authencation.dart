@@ -82,11 +82,17 @@ class FirAuth {
           print("User signed in: ${credential.user!.email}");
           final userRole = userData['role'];
           print('form role1: $userRole');
-          if (userRole == 'admin') {
+          if (userRole == 'user') {
+            Get.offAll(() => const AccessLocation());
             // Get.offAll(() => const HomeScreenAdmin());
           } else {
             print('form role: $userRole');
-            Get.offAll(() => const AccessLocation());
+            Get.snackbar(
+              "Info",
+              "User account information is incorrect",
+              snackPosition: SnackPosition.TOP,
+            );
+            // Get.offAll(() => const AccessLocation());
             // Get.offAll(() => const MainNavView(initialIndex: 0,));
           }
         } else {
