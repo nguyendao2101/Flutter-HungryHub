@@ -166,7 +166,7 @@ class _MenuViewState extends State<MenuView> {
   Widget _buildProductList(String category) {
     // Lọc các sản phẩm theo danh mục
     final filteredProducts =
-        _products.where((p) => p['Category'] == category).toList();
+        _products.where((p) => ((p['Category'] == category) && (p['Show'] == 1))).toList();
 
     return SizedBox(
       height: 1425, // Điều chỉnh chiều cao phù hợp nếu cần

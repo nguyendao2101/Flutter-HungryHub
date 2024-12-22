@@ -81,12 +81,12 @@ class ComboView extends StatelessWidget {
                       shrinkWrap: true,
                       itemCount: listDS
                           .where((product) =>
-                              product['Category'] == 'Combo 1 Người')
+                              ((product['Category'] == 'Combo 1 Người')&& (product['Show'] == 1)))
                           .length, // Lọc sản phẩm theo category
                       itemBuilder: (context, index) {
                         final filteredProducts = listDS
                             .where((product) =>
-                                product['Category'] == 'Combo 1 Người')
+                        ((product['Category'] == 'Combo 1 Người')&& (product['Show'] == 1)))
                             .toList(); // Lọc sản phẩm ngay từ đầu
                         final product =
                             filteredProducts[index]; // Sử dụng danh sách đã lọc
@@ -121,12 +121,12 @@ class ComboView extends StatelessWidget {
                       shrinkWrap: true,
                       itemCount: listDS
                           .where(
-                              (product) => product['Category'] == 'Combo Nhóm')
+                              (product) => ((product['Category'] == 'Combo Nhóm')&& (product['Show'] == 1)))
                           .length, // Lọc sản phẩm theo category
                       itemBuilder: (context, index) {
                         final filteredProducts = listDS
                             .where((product) =>
-                                product['Category'] == 'Combo Nhóm')
+                        ((product['Category'] == 'Combo Nhóm')&& (product['Show'] == 1)))
                             .toList(); // Lọc sản phẩm ngay từ đầu
                         final product =
                             filteredProducts[index]; // Sử dụng danh sách đã lọc

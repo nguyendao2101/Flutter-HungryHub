@@ -81,12 +81,12 @@ class ChickenView extends StatelessWidget {
                       shrinkWrap: true,
                       itemCount: listDS
                           .where((product) =>
-                              product['Category'] == 'Gà Rán - Gà Quay')
+                              ((product['Category'] == 'Gà Rán - Gà Quay') && (product['Show'] == 1)))
                           .length, // Lọc sản phẩm theo category
                       itemBuilder: (context, index) {
                         final filteredProducts = listDS
                             .where((product) =>
-                                product['Category'] == 'Gà Rán - Gà Quay')
+                        ((product['Category'] == 'Gà Rán - Gà Quay') && (product['Show'] == 1)))
                             .toList(); // Lọc sản phẩm ngay từ đầu
                         final product =
                             filteredProducts[index]; // Sử dụng danh sách đã lọc

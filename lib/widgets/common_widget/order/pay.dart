@@ -556,7 +556,9 @@ class _PayState extends State<Pay> {
                     onPressed: (){
                       if(selectedPaymentMethod.value?['id'] == '2'){
                         onPayment(total);
-                        _showPaymentMethod(context, selectedPaymentMethod);
+                        Future.delayed(const Duration(seconds: 2), () {
+                          _showPaymentMethod(context, selectedPaymentMethod);
+                        });
                       } else if(selectedPaymentMethod.value?['id'] == '3'){
                         _showPaymentMethod(context, selectedPaymentMethod);
                       } else {
@@ -639,7 +641,7 @@ class _PayState extends State<Pay> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  if (selectedPaymentMethod.value?['id'] == '1')
+                  // if (selectedPaymentMethod.value?['id'] == '1')
                     Align(
                       alignment: Alignment.center,
                       child: Column(
@@ -684,51 +686,54 @@ class _PayState extends State<Pay> {
                         ],
                       ),
                     ),
-                  if (selectedPaymentMethod.value?['id'] == '2')
-                    Align(
-                      alignment: Alignment.center,
-                      child: Column(
-                        children: [
-                          // Add a check icon for visual confirmation
-                          const SizedBox(height: 24),
-                          Image.asset(responseCode == '00' ? ImageAsset.check : ImageAsset.remove, height: 125,),
-                          const SizedBox(height: 64),
-
-                          const Text(
-                            'Your order has been confirmed by HungruHub.',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Poppins',
-                              color: Colors.black87,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 48),
-                          // Button to go to Order Tracking
-                          TextButton(
-                            onPressed: () {
-                              Get.to(() => const OrderTracking());
-                            },
-                            child: const Text(
-                              'Order Tracking',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white,
-                              ),
-                            ),
-                            style: TextButton.styleFrom(
-                              backgroundColor: const Color(0xffE03137),
-                              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 40),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                  // if (selectedPaymentMethod.value?['id'] == '2')
+                  //   Align(
+                  //     alignment: Alignment.center,
+                  //     child: Column(
+                  //       children: [
+                  //         // Add a check icon for visual confirmation
+                  //         const SizedBox(height: 24),
+                  //         Image.asset(responseCode == '00' ? ImageAsset.check : ImageAsset.remove, height: 125,),
+                  //         const SizedBox(height: 64),
+                  //
+                  //         const Text(
+                  //           'Your order has been confirmed by HungruHub.',
+                  //           style: TextStyle(
+                  //             fontSize: 18,
+                  //             fontWeight: FontWeight.w500,
+                  //             fontFamily: 'Poppins',
+                  //             color: Colors.black87,
+                  //           ),
+                  //           textAlign: TextAlign.center,
+                  //         ),
+                  //         const SizedBox(height: 48),
+                  //         // Button to go to Order Tracking
+                  //         TextButton(
+                  //           onPressed: () {
+                  //             // Get.to(() => const OrderTracking());
+                  //             setState(() {
+                  //               responseCode == '00';
+                  //             });
+                  //           },
+                  //           child: const Text(
+                  //             'Order Tracking',
+                  //             style: TextStyle(
+                  //               fontSize: 16,
+                  //               fontWeight: FontWeight.w500,
+                  //               color: Colors.white,
+                  //             ),
+                  //           ),
+                  //           style: TextButton.styleFrom(
+                  //             backgroundColor: const Color(0xffE03137),
+                  //             padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 40),
+                  //             shape: RoundedRectangleBorder(
+                  //               borderRadius: BorderRadius.circular(8),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
                   const SizedBox(height: 16),
                 ],
               ),
