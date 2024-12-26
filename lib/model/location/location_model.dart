@@ -46,7 +46,7 @@ class LocationService {
       String country = placemark.country ?? "Unknown Country";
 
       // Trả về thông tin địa chỉ và vị trí
-      return 'District: ${placemark.subAdministrativeArea ?? "Unknown"}, City: $city, \nCountry: $country';
+      return 'District: ${placemark.subAdministrativeArea ?? "Unknown"}, City: $city, Country: $country';
     } else {
       return 'No address found.';
     }

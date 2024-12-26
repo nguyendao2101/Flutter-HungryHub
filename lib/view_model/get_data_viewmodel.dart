@@ -146,4 +146,70 @@ class GetDataViewModel extends GetxController {
       print('Error fetching orders: $e');
     }
   }
+  // Future<void> addOrderToFirestore({
+  //   required String storeId,
+  //   required String? deliveryAddress,
+  //   required String placeOfPurchase,
+  //   required String? paymentMethod,
+  //   required double? total,
+  //   required List<Map<String, dynamic>> listProducts,
+  // }) async {
+  //   try {
+  //     // Dữ liệu đơn hàng
+  //     final orderData = {
+  //       "orderId": storeId,
+  //       "storeId": storeId,
+  //       "purchaseDate": DateTime.now().toIso8601String(), // Thời gian tự động
+  //       "deliveryAddress": deliveryAddress,
+  //       "placeOfPurchase": placeOfPurchase,
+  //       "paymentMethod": paymentMethod,
+  //       "total": total,
+  //       "listProducts": listProducts,
+  //     };
+  //
+  //     // Lưu dữ liệu và sử dụng phương thức add để Firestore tự tạo ID
+  //     final docRef = await FirebaseFirestore.instance.collection('orders').add(orderData);
+  //
+  //     // Lấy ID tài liệu được tạo ra
+  //     final orderId = docRef.id;
+  //     print('Order with ID $orderId added successfully!');
+  //   } catch (e) {
+  //     print('Error adding order: $e');
+  //   }
+  // }
+
+Future<void> addOrderToFirestore({
+    required String storeId,
+    required String? deliveryAddress,
+    required String placeOfPurchase,
+    required String? paymentMethod,
+    required double? total,
+    required List<Map<String, dynamic>> listProducts,
+  }) async {
+    try {
+      // Lấy số lượng hiện tại của đơn hàng để tạo orderId mới
+      final ordersCollection = FirebaseFirestore.instance.collection('orders');
+      final querySnapshot = await ordersCollection.get();
+      final orderId = querySnapshot.docs.length + 1; // Tạo orderId tăng dần
+
+      // Dữ liệu đơn hàng
+      final orderData = {
+        "storeId": storeId,
+        "purchaseDate": DateTime.now().toIso8601String(), // Thời gian tự động
+        "deliveryAddress": deliveryAddress,
+        "placeOfPurchase": placeOfPurchase,
+        "paymentMethod": paymentMethod,
+        "status": 'Confirm',
+        "total": total,
+        "listProducts": listProducts,
+      };
+
+      // Lưu dữ liệu với orderId làm ID của tài liệu
+      await ordersCollection.doc(orderId.toString()).set(orderData);
+      print('Order with ID $orderId added successfully!');
+    } catch (e) {
+      print('Error adding order: $e');
+    }
+  }
+
 }

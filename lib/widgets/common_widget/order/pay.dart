@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hungry_hub/view_model/get_data_viewmodel.dart';
 import 'package:flutter_hungry_hub/view_model/orders_view_model.dart';
 import 'package:flutter_hungry_hub/widgets/common/image_extention.dart';
 import 'package:flutter_hungry_hub/widgets/common_widget/button/bassic_button.dart';
@@ -24,6 +25,7 @@ class Pay extends StatefulWidget {
 
 class _PayState extends State<Pay> {
   final controller = Get.put(OrdersViewModel());
+  final controllerGetData = Get.put(GetDataViewModel());
   TextEditingController couponController = TextEditingController();
   double coupon = 0;  // Khai báo coupon là biến trạng thái
   double delivery = 30000;  // Khai báo coupon là biến trạng thái
@@ -33,6 +35,7 @@ class _PayState extends State<Pay> {
   String? _selectedStoreId;
   bool _isLoadingStores = false;
   String? selectedLocation; // Lưu địa chỉ được chọn
+  String? selectedLocationName ; // Lưu địa chỉ được chọn
   var selectedPaymentMethod = Rxn<Map<String, String>>();
 
   final List<Map<String, String>> paymentMethods = [
@@ -41,13 +44,21 @@ class _PayState extends State<Pay> {
     {'id': '3', 'name': 'Payment via Stripe'},
   ];
   String responseCode = '';
-
+  List<int> quantities = [];
+  List<String> nameProduct = []; // Sửa kiểu dữ liệu của nameProduct thành List<String>
 
   @override
   void initState() {
     super.initState();
     controller.fetchStores();
+
+    // Sửa việc chuyển đổi `Name` sang kiểu String
+    quantities = widget.product.map<int>((item) => item['Quantity'] ?? 0).toList();
+    nameProduct = widget.product.map<String>((item) => item['Name'] ?? '').toList(); // Sửa kiểu dữ liệu thành String
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -98,6 +109,7 @@ class _PayState extends State<Pay> {
           ),
         ),
         body: SingleChildScrollView(
+
           child: Column(
             children: [
               // ListView.builder
@@ -322,10 +334,11 @@ class _PayState extends State<Pay> {
                                 onChanged: (String? newValue) {
                                   setState(() {
                                     selectedLocation = newValue;
+                                    selectedLocationName = locations[selectedLocation];
                                   });
 
                                   // In ra giá trị được chọn
-                                  print('Địa chỉ được chọn: $newValue');
+                                  print('Địa chỉ được chọn: $selectedLocationName');
                                 },
                                 style: const TextStyle(
                                   fontSize: 16,
@@ -556,13 +569,46 @@ class _PayState extends State<Pay> {
                     onPressed: (){
                       if(selectedPaymentMethod.value?['id'] == '2'){
                         onPayment(total);
+                        if(responseCode == '00')
                         Future.delayed(const Duration(seconds: 2), () {
                           _showPaymentMethod(context, selectedPaymentMethod);
+                          controllerGetData.addOrderToFirestore(storeId: selectedStore.value!['id'], deliveryAddress: selectedLocationName, placeOfPurchase: selectedStore.value!['Name'], paymentMethod: selectedPaymentMethod.value?['name'],
+                              listProducts: [
+                                for (int i = 0; i < quantities.length; i++)
+                                  {
+                                    "nameProduct": nameProduct[i],
+                                    "quantities": quantities[i],
+                                  },
+                              ],
+                            total: total,
+                          );
                         });
+                        if(responseCode != '00')
+                          _showPaymentMethodFail(context, selectedPaymentMethod);
                       } else if(selectedPaymentMethod.value?['id'] == '3'){
                         _showPaymentMethod(context, selectedPaymentMethod);
+                        controllerGetData.addOrderToFirestore(storeId: selectedStore.value!['id'], deliveryAddress: selectedLocationName, placeOfPurchase: selectedStore.value!['Name'], paymentMethod: selectedPaymentMethod.value?['name'],
+                          listProducts: [
+                            for (int i = 0; i < quantities.length; i++)
+                              {
+                                "nameProduct": nameProduct[i],
+                                "quantities": quantities[i],
+                              },
+                          ],
+                          total: total,
+                        );
                       } else {
                         _showPaymentMethod(context, selectedPaymentMethod);
+                        controllerGetData.addOrderToFirestore(storeId: selectedStore.value!['id'], deliveryAddress: selectedLocationName, placeOfPurchase: selectedStore.value!['Name'], paymentMethod: selectedPaymentMethod.value?['name'],
+                          listProducts: [
+                            for (int i = 0; i < quantities.length; i++)
+                              {
+                                "nameProduct": nameProduct[i],
+                                "quantities": quantities[i],
+                              },
+                          ],
+                          total: total,
+                        );
                       }
                     },
                     title: 'Continue to payment', sizeTitle: 16, height: 62, radius: 12, colorButton: const Color(0xffFF7622), fontW: FontWeight.w500,),
@@ -606,6 +652,141 @@ class _PayState extends State<Pay> {
 
         ],
       ),
+    );
+  }
+  void _showPaymentMethodFail(BuildContext context, Rxn<Map<String, String>> selectedPaymentMethod) {
+    showModalBottomSheet(
+      context: context,
+      barrierColor: Colors.grey.withOpacity(0.8),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      isDismissible: true,
+      isScrollControlled: true,
+      builder: (context) {
+        return FractionallySizedBox(
+          heightFactor: 0.8,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: 16,
+                right: 16,
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Payment Confirmation',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Poppins',
+                      color: Color(0xff32343E),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  // if (selectedPaymentMethod.value?['id'] == '1')
+                  Align(
+                    alignment: Alignment.center,
+                    child: Column(
+                      children: [
+                        // Add a check icon for visual confirmation
+                        const SizedBox(height: 24),
+                        Image.asset(ImageAsset.remove, height: 128,),
+                        const SizedBox(height: 64),
+
+                        const Text(
+                          'Your order has been confirmed by HungryHub.',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'Poppins',
+                            color: Colors.black87,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 48),
+                        // Button to go to Order Tracking
+                        TextButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          child: const Text(
+                            'Back',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                            ),
+                          ),
+                          style: TextButton.styleFrom(
+                            backgroundColor: const Color(0xffE03137),
+                            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 40),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // if (selectedPaymentMethod.value?['id'] == '2')
+                  //   Align(
+                  //     alignment: Alignment.center,
+                  //     child: Column(
+                  //       children: [
+                  //         // Add a check icon for visual confirmation
+                  //         const SizedBox(height: 24),
+                  //         Image.asset(responseCode == '00' ? ImageAsset.check : ImageAsset.remove, height: 125,),
+                  //         const SizedBox(height: 64),
+                  //
+                  //         const Text(
+                  //           'Your order has been confirmed by HungruHub.',
+                  //           style: TextStyle(
+                  //             fontSize: 18,
+                  //             fontWeight: FontWeight.w500,
+                  //             fontFamily: 'Poppins',
+                  //             color: Colors.black87,
+                  //           ),
+                  //           textAlign: TextAlign.center,
+                  //         ),
+                  //         const SizedBox(height: 48),
+                  //         // Button to go to Order Tracking
+                  //         TextButton(
+                  //           onPressed: () {
+                  //             // Get.to(() => const OrderTracking());
+                  //             setState(() {
+                  //               responseCode == '00';
+                  //             });
+                  //           },
+                  //           child: const Text(
+                  //             'Order Tracking',
+                  //             style: TextStyle(
+                  //               fontSize: 16,
+                  //               fontWeight: FontWeight.w500,
+                  //               color: Colors.white,
+                  //             ),
+                  //           ),
+                  //           style: TextButton.styleFrom(
+                  //             backgroundColor: const Color(0xffE03137),
+                  //             padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 40),
+                  //             shape: RoundedRectangleBorder(
+                  //               borderRadius: BorderRadius.circular(8),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
   void _showPaymentMethod(BuildContext context, Rxn<Map<String, String>> selectedPaymentMethod) {
@@ -652,7 +833,7 @@ class _PayState extends State<Pay> {
                           const SizedBox(height: 64),
 
                           const Text(
-                            'Your order has been confirmed by HungruHub.',
+                            'Your order has been confirmed by HungryHub.',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w500,
@@ -775,4 +956,5 @@ class _PayState extends State<Pay> {
       },
     );
   }
+
 }

@@ -15,6 +15,7 @@ import 'package:get/get.dart';
 
 import '../widgets/common/image_extention.dart';
 import '../widgets/common_widget/profile/function_profile.dart';
+import 'login_view.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -219,7 +220,7 @@ class _ProfileViewState extends State<ProfileView> {
                             children: [
                               GestureDetector(
                                   onTap: () {
-                                    Get.to(() => const OrdersView());
+                                    Get.offAll(() => const LoginView());
                                   },
                                   child: FunctionPng(image: ImageAsset.logOut, title: 'Log Out'),)
                             ],
@@ -341,7 +342,7 @@ class _ProfileViewState extends State<ProfileView> {
                       },
                     ),
                     const Text(
-                      'I agree to the terms and conditions above.',
+                      'I agree!',
                       style: TextStyle(
                         fontSize: 14,
                         color: Color(0xff111A2C),
