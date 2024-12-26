@@ -48,6 +48,60 @@ class HomeViewModel extends GetxController {
     return favoriteProducts.contains(product);
   }
 
+  Future<void> addToPurchasedCart(Map<String, dynamic> product) async {
+    try {
+      User? currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser == null) {
+        throw Exception("No user is signed in.");
+      }
+
+      String userId = currentUser.uid;
+
+      // Lấy danh sách ShoppingCart hiện tại từ Firebase
+      final snapshot = await _database.child('users/$userId/PurchasedCart').get();
+      List<dynamic> currentCart = [];
+
+      if (snapshot.exists && snapshot.value is List) {
+        currentCart = List<dynamic>.from(snapshot.value as List);
+      }
+
+      // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
+      bool isProductInCart = currentCart.any((item) => item['id'] == product['id']); // Kiểm tra dựa trên 'id' của sản phẩm
+
+      if (isProductInCart) {
+        Get.snackbar(
+          "Info",
+          "This product is already in your purchased cart.",
+          snackPosition: SnackPosition.TOP,
+        );
+      } else {
+        // Thêm sản phẩm mới vào danh sách
+        currentCart.add(product);
+
+        // Ghi danh sách cập nhật lên Firebase
+        await _database.child('users/$userId/PurchasedCart').set(currentCart);
+
+        // Cập nhật lại shoppingCart và thông báo thành công
+        shoppingCart.clear();
+        shoppingCart.addAll(currentCart.cast<Map<String, dynamic>>()); // Cập nhật shoppingCart bằng cách cast lại dữ liệu
+        update(); // Cập nhật UI
+
+        Get.snackbar(
+          "Success",
+          "Product added to PurchasedCart!",
+          snackPosition: SnackPosition.TOP,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Success",
+        "Product added to PurchasedCart!",
+        snackPosition: SnackPosition.TOP,
+      );
+    }
+  }
+
   Future<void> addToFavoriteCart(Map<String, dynamic> product) async {
     try {
       User? currentUser = FirebaseAuth.instance.currentUser;

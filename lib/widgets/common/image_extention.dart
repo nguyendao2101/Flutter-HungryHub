@@ -40,6 +40,7 @@ class ImageAsset{
   static String stripe = '$baseImagePathPNG/stripe.png';
   static String check = '$baseImagePathPNG/check.png';
   static String remove = '$baseImagePathPNG/remove.png';
+  static String purchased = '$baseImagePathPNG/purchased.png';
 
 
 

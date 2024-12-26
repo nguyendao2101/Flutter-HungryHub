@@ -5,8 +5,7 @@ import 'package:get/get.dart';
 
 import '../model/firebase/firebase_authencation.dart';
 
-class ProfileViewModel extends GetxController{
-  late TextEditingController searchController = TextEditingController();
+class ProfileViewModel extends GetxController {
   final DatabaseReference _database = FirebaseDatabase.instance.ref();
   final _userData = {}.obs;
   String _userId = '';
@@ -18,8 +17,6 @@ class ProfileViewModel extends GetxController{
     _initializeUserId();
   }
 
-
-
   void _initializeUserId() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -27,6 +24,7 @@ class ProfileViewModel extends GetxController{
       await _getUserData();
     }
   }
+
   Future<void> _getUserData() async {
     DatabaseReference userRef = _database.child('users/$_userId');
     DataSnapshot snapshot = await userRef.get();
@@ -45,7 +43,8 @@ class ProfileViewModel extends GetxController{
 
     if (userSnapshot.exists) {
       // Lấy dữ liệu từ userSnapshot
-      Map<String, dynamic> userData = Map<String, dynamic>.from(userSnapshot.value as Map);
+      Map<String, dynamic> userData =
+          Map<String, dynamic>.from(userSnapshot.value as Map);
 
       // Lưu thông tin vào nhánh 'browseShop/$_userId'
       DatabaseReference browseShopRef = _database.child('browseShop/$_userId');
@@ -60,10 +59,5 @@ class ProfileViewModel extends GetxController{
   void onLogout() {
     FirAuth firAuth = FirAuth(); // Tạo một thể hiện của FirAuth
     firAuth.signOut(); // Gọi phương thức signOut từ thể hiện
-  }
-  @override
-  void onClose() {
-    searchController.dispose();
-    super.onClose();
   }
 }
