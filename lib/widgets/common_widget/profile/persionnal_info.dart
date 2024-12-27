@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hungry_hub/view_model/profile_view_model.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 import '../../common/image_extention.dart';
@@ -14,7 +13,7 @@ class PersonalInfo extends StatelessWidget {
     final controller = Get.put(ProfileViewModel());
 
     return Scaffold(
-      appBar: AppBarProfile(title: 'Perisonal Info'),
+      appBar: AppBarProfile(title: 'Persional Info'),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -60,7 +59,11 @@ class PersonalInfo extends StatelessWidget {
                       icon: Icons.person,
                     ),
                     const Divider(),
-                    _buildUserEmailTile(title: 'Email', icon: Icons.email, value: controller.userData['email']),
+                    _buildUserEmailTile(
+                      title: 'Email',
+                      icon: Icons.email,
+                      value: controller.userData['email'],
+                    ),
                     const Divider(),
                     _buildUserInfoTile(
                       title: 'Address',
@@ -88,6 +91,9 @@ class PersonalInfo extends StatelessWidget {
     String? value,
     required IconData icon,
   }) {
+    // Kiểm tra nếu độ dài của value lớn hơn 20 ký tự, thì cắt và thêm dấu "..."
+    String displayedValue = (value != null && value.length > 12) ? value.substring(0, 12) + '...' : (value ?? 'N/A');
+
     return ListTile(
       leading: Icon(
         icon,
@@ -103,7 +109,7 @@ class PersonalInfo extends StatelessWidget {
         ),
       ),
       trailing: Text(
-        value ?? 'N/A',
+        displayedValue,
         style: const TextStyle(
           fontSize: 15,
           fontWeight: FontWeight.w400,
@@ -113,6 +119,8 @@ class PersonalInfo extends StatelessWidget {
       ),
     );
   }
+
+
   Widget _buildUserEmailTile({
     required String title,
     String? value,
@@ -121,7 +129,7 @@ class PersonalInfo extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
@@ -156,5 +164,4 @@ class PersonalInfo extends StatelessWidget {
       ),
     );
   }
-
 }
