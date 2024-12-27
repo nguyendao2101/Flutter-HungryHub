@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hungry_hub/view_model/get_data_viewmodel.dart';
+import 'package:flutter_hungry_hub/view_model/home_view_model.dart';
 import 'package:flutter_hungry_hub/view_model/orders_view_model.dart';
 import 'package:flutter_hungry_hub/widgets/common/image_extention.dart';
 import 'package:flutter_hungry_hub/widgets/common_widget/button/bassic_button.dart';
@@ -25,6 +26,7 @@ class Pay extends StatefulWidget {
 
 class _PayState extends State<Pay> {
   final controller = Get.put(OrdersViewModel());
+  final controllerHome = Get.put(HomeViewModel());
   final controllerGetData = Get.put(GetDataViewModel());
   TextEditingController couponController = TextEditingController();
   double coupon = 0;  // Khai báo coupon là biến trạng thái
@@ -44,6 +46,7 @@ class _PayState extends State<Pay> {
     {'id': '3', 'name': 'Payment via Stripe'},
   ];
   String responseCode = '';
+  List<String> idProduct = [];
   List<int> quantities = [];
   List<String> nameProduct = []; // Sửa kiểu dữ liệu của nameProduct thành List<String>
 
@@ -55,6 +58,7 @@ class _PayState extends State<Pay> {
     // Sửa việc chuyển đổi `Name` sang kiểu String
     quantities = widget.product.map<int>((item) => item['Quantity'] ?? 0).toList();
     nameProduct = widget.product.map<String>((item) => item['Name'] ?? '').toList(); // Sửa kiểu dữ liệu thành String
+    idProduct = widget.product.map<String>((item) => item['id'] ?? '').toList(); // Sửa kiểu dữ liệu thành String
   }
 
 
@@ -569,8 +573,7 @@ class _PayState extends State<Pay> {
                     onPressed: (){
                       if(selectedPaymentMethod.value?['id'] == '2'){
                         onPayment(total);
-                        if(responseCode == '00')
-                        Future.delayed(const Duration(seconds: 2), () {
+                        if(responseCode == '00'){
                           _showPaymentMethod(context, selectedPaymentMethod);
                           controllerGetData.addOrderToFirestore(storeId: selectedStore.value!['id'], deliveryAddress: selectedLocationName, placeOfPurchase: selectedStore.value!['Name'], paymentMethod: selectedPaymentMethod.value?['name'],
                               listProducts: [
@@ -580,9 +583,11 @@ class _PayState extends State<Pay> {
                                     "quantities": quantities[i],
                                   },
                               ],
-                            total: total,
-                          );
-                        });
+                              total: total);
+                              // for (var singleProduct in widget.product) {
+                              //    controllerHome.addToPurchasedCart(singleProduct);
+                              // }
+                        }
                         if(responseCode != '00')
                           _showPaymentMethodFail(context, selectedPaymentMethod);
                       } else if(selectedPaymentMethod.value?['id'] == '3'){
@@ -609,6 +614,11 @@ class _PayState extends State<Pay> {
                           ],
                           total: total,
                         );
+                        controllerHome.addAllToPurchasedCart(widget.product);
+                        // for (var singleProduct in widget.product) {
+                        //   controllerHome.addToPurchasedCart(singleProduct);
+                        //   print('so luong duoc them vao la: $singleProduct');
+                        // }
                       }
                     },
                     title: 'Continue to payment', sizeTitle: 16, height: 62, radius: 12, colorButton: const Color(0xffFF7622), fontW: FontWeight.w500,),

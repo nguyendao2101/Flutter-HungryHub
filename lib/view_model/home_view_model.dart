@@ -48,7 +48,7 @@ class HomeViewModel extends GetxController {
     return favoriteProducts.contains(product);
   }
 
-  Future<void> addToPurchasedCart(Map<String, dynamic> product) async {
+  Future<void> addAllToPurchasedCart(List<Map<String, dynamic>> products) async {
     try {
       User? currentUser = FirebaseAuth.instance.currentUser;
 
@@ -58,7 +58,7 @@ class HomeViewModel extends GetxController {
 
       String userId = currentUser.uid;
 
-      // Lấy danh sách ShoppingCart hiện tại từ Firebase
+      // Lấy danh sách hiện tại từ Firebase
       final snapshot = await _database.child('users/$userId/PurchasedCart').get();
       List<dynamic> currentCart = [];
 
@@ -66,41 +66,39 @@ class HomeViewModel extends GetxController {
         currentCart = List<dynamic>.from(snapshot.value as List);
       }
 
-      // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
-      bool isProductInCart = currentCart.any((item) => item['id'] == product['id']); // Kiểm tra dựa trên 'id' của sản phẩm
-
-      if (isProductInCart) {
-        Get.snackbar(
-          "Info",
-          "This product is already in your purchased cart.",
-          snackPosition: SnackPosition.TOP,
-        );
-      } else {
-        // Thêm sản phẩm mới vào danh sách
-        currentCart.add(product);
-
-        // Ghi danh sách cập nhật lên Firebase
-        await _database.child('users/$userId/PurchasedCart').set(currentCart);
-
-        // Cập nhật lại shoppingCart và thông báo thành công
-        shoppingCart.clear();
-        shoppingCart.addAll(currentCart.cast<Map<String, dynamic>>()); // Cập nhật shoppingCart bằng cách cast lại dữ liệu
-        update(); // Cập nhật UI
-
-        Get.snackbar(
-          "Success",
-          "Product added to PurchasedCart!",
-          snackPosition: SnackPosition.TOP,
-        );
+      // Thêm tất cả sản phẩm mới vào danh sách hiện tại
+      for (var product in products) {
+        // Kiểm tra trùng lặp dựa trên `id`
+        bool isProductInCart = currentCart.any((item) => item['id'] == product['id']);
+        if (!isProductInCart) {
+          currentCart.add(product);
+        }
       }
+
+      // Ghi danh sách cập nhật lên Firebase
+      await _database.child('users/$userId/PurchasedCart').set(currentCart);
+
+      // Cập nhật UI
+      shoppingCart.clear();
+      shoppingCart.addAll(currentCart.cast<Map<String, dynamic>>());
+      update();
+
+      // Get.snackbar(
+      //   "Success",
+      //   "Products added to PurchasedCart!",
+      //   snackPosition: SnackPosition.TOP,
+      // );
     } catch (e) {
-      Get.snackbar(
-        "Success",
-        "Product added to PurchasedCart!",
-        snackPosition: SnackPosition.TOP,
-      );
+      print('Lỗi khi thêm danh sách sản phẩm: $e');
+      // Get.snackbar(
+      //   "Error",
+      //   "Failed to add products to PurchasedCart!",
+      //   snackPosition: SnackPosition.TOP,
+      // );
     }
   }
+
+
 
   Future<void> addToFavoriteCart(Map<String, dynamic> product) async {
     try {

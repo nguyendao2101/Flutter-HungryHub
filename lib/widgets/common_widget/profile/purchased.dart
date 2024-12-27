@@ -7,11 +7,14 @@ import '../order/pay.dart';
 import 'app_bar_profile.dart';
 
 class Purchased extends StatefulWidget {
-  const Purchased({super.key});
+  final List<String> idProduct; // Danh sách ID sản phẩm
+
+  Purchased({Key? key, this.idProduct = const []}) : super(key: key);
 
   @override
   State<Purchased> createState() => _PurchasedState();
 }
+
 
 class _PurchasedState extends State<Purchased> {
   final controller = Get.put(PurchasedViewModel());

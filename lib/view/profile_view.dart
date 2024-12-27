@@ -194,7 +194,7 @@ class _ProfileViewState extends State<ProfileView> {
                               ),
                               GestureDetector(
                                   onTap: () {
-                                    Get.to(() => const Purchased());
+                                    Get.to(() => Purchased());
                                   },
                                   child: FunctionPng(image: ImageAsset.purchased, title: 'Purchased')),
                             ],
