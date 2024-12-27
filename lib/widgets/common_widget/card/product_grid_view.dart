@@ -24,7 +24,7 @@ class ProductGridView extends StatelessWidget {
         );
       },
       child: Padding(
-        padding: const EdgeInsets.all(4.0),
+        padding: const EdgeInsets.symmetric(horizontal: 4),
         child: Card(
           elevation: 3,
           shape: RoundedRectangleBorder(
@@ -80,7 +80,7 @@ class ProductGridView extends StatelessWidget {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.all(4),
+                padding: const EdgeInsets.symmetric(horizontal: 4),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

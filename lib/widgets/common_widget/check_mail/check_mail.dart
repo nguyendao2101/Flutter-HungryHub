@@ -48,6 +48,7 @@ class _CheckMailState extends State<CheckMail> {
   void initState() {
     super.initState();
     verificationCode = widget.verificationCode;
+    print('ma dc nhan: $verificationCode');
     startTimer();
   }
 
@@ -83,6 +84,7 @@ class _CheckMailState extends State<CheckMail> {
     setState(() {
       _remainingSeconds = 90; // Reset thời gian đếm ngược
       verificationCode = newVerificationCode; // Đặt lại giá trị mã xác minh
+      print('ma nhan dc moi la: $verificationCode');
     });
 
     startTimer(); // Bắt đầu lại timer
@@ -186,9 +188,6 @@ class _CheckMailState extends State<CheckMail> {
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
                           _resendCode(); // Gọi lại mã xác minh
-                          controller.sendEmail(controller.email,
-                              codeMail.toString()); // Gửi lại email
-                          print('code 2: $codeMail');
                         },
                     ),
                   ],
@@ -199,7 +198,7 @@ class _CheckMailState extends State<CheckMail> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(6, (index) {
                   return Container(
-                    width: 50,
+                    width: 40,
                     margin: const EdgeInsets.symmetric(horizontal: 5),
                     child: TextField(
                       controller: _controllers[index],

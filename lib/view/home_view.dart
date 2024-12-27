@@ -76,7 +76,9 @@ class _HomeViewState extends State<HomeView> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        controller.userData['address'].toString().toUpperCase(),
+                        (controller.userData['address'].toString().length > 20
+                            ? '${controller.userData['address'].toString().substring(0, 20)}...'
+                            : controller.userData['address'].toString()).toUpperCase(),
                         style: const TextStyle(
                           fontSize: 14,
                           color: Colors.black,
@@ -84,6 +86,7 @@ class _HomeViewState extends State<HomeView> {
                           fontFamily: 'Poppins',
                         ),
                       ),
+
                     ],
                   ),
                 ],

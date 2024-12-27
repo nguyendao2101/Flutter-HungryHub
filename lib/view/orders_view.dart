@@ -89,7 +89,6 @@ class _OrdersViewState extends State<OrdersView> {
                                 fontWeight: FontWeight.w500,
                                 fontFamily: 'Poppins',
                               ),),
-                              const Evaluate(height: 24, width: 71),
                             ],
                           ),
                         ],

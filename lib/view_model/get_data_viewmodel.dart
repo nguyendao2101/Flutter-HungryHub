@@ -10,12 +10,14 @@ class GetDataViewModel extends GetxController {
   // Biến lưu trữ danh sách cửa hàng, sản phẩm và đơn hàng
   final RxList<Map<String, dynamic>> stores = <Map<String, dynamic>>[].obs;
   final RxList<Map<String, dynamic>> products = <Map<String, dynamic>>[].obs;
+  final RxList<Map<String, dynamic>> orderTracking = <Map<String, dynamic>>[].obs;
   final RxList<Map<String, dynamic>> orders = <Map<String, dynamic>>[].obs;
 
   @override
   void onInit() {
     super.onInit();
     fetchStores(); // Lấy danh sách cửa hàng
+    fetchOrderTracking();
   }
 
   // Hàm lấy danh sách cửa hàng
@@ -59,6 +61,45 @@ class GetDataViewModel extends GetxController {
       print('Error fetching products: $e');
     }
   }
+
+  // Hàm lấy danh sách sản phẩm
+// Hàm lấy danh sách trạng thái đơn hàng
+  Future<void> fetchOrderTracking() async {
+    try {
+      // Lấy dữ liệu từ collection 'orders'
+      final QuerySnapshot snapshot = await _firestore.collection('orders').get();
+
+      // Chuyển đổi dữ liệu thành danh sách Map và xử lý theo đúng cấu trúc
+      final fetchedOrders = snapshot.docs.map((doc) {
+        final orderData = doc.data() as Map<String, dynamic>;
+
+        return {
+          'orderId': doc.id, // Lưu orderId từ Firestore
+          'deliveryAddress': orderData['deliveryAddress'], // Địa chỉ giao hàng
+          'paymentMethod': orderData['paymentMethod'], // Phương thức thanh toán
+          'placeOfPurchase': orderData['placeOfPurchase'], // Nơi mua hàng
+          'purchaseDate': orderData['purchaseDate'], // Ngày mua
+          'status': orderData['status'], // Trạng thái đơn hàng
+          'storeId': orderData['storeId'], // Store ID
+          'total': orderData['total'], // Tổng giá trị đơn hàng
+          'userId': orderData['userId'], // User ID
+          'listProducts': orderData['listProducts'], // Danh sách sản phẩm
+        };
+      }).toList();
+
+      // In ra dữ liệu đã lấy được
+      print('Order Tracking fetched:');
+      fetchedOrders.forEach((order) {
+        print('Order ID: ${order['orderId']}, Data: $order');
+      });
+
+      // Gán dữ liệu vào biến orderTracking
+      orderTracking.assignAll(fetchedOrders);
+    } catch (e) {
+      print('Error fetching order tracking: $e');
+    }
+  }
+
 
   // Hàm lấy sản phẩm của cửa hàng cụ thể
   Future<void> fetchProductsByStore(String storeId) async {
@@ -178,8 +219,9 @@ class GetDataViewModel extends GetxController {
   //   }
   // }
 
-Future<void> addOrderToFirestore({
+  Future<void> addOrderToFirestore({
     required String storeId,
+    required String userId,
     required String? deliveryAddress,
     required String placeOfPurchase,
     required String? paymentMethod,
@@ -187,29 +229,35 @@ Future<void> addOrderToFirestore({
     required List<Map<String, dynamic>> listProducts,
   }) async {
     try {
-      // Lấy số lượng hiện tại của đơn hàng để tạo orderId mới
+      // Lấy tham chiếu đến collection 'orders'
       final ordersCollection = FirebaseFirestore.instance.collection('orders');
-      final querySnapshot = await ordersCollection.get();
-      final orderId = querySnapshot.docs.length + 1; // Tạo orderId tăng dần
 
-      // Dữ liệu đơn hàng
+      // Tạo orderId bằng timestamp
+      final orderId = DateTime.now().millisecondsSinceEpoch.toString();
+
+      // Dữ liệu đơn hàng với orderId
       final orderData = {
         "storeId": storeId,
-        "purchaseDate": DateTime.now().toIso8601String(), // Thời gian tự động
+        "userId": userId,
+        "purchaseDate": DateTime.now().toIso8601String(),
         "deliveryAddress": deliveryAddress,
         "placeOfPurchase": placeOfPurchase,
         "paymentMethod": paymentMethod,
         "status": 'Confirm',
         "total": total,
         "listProducts": listProducts,
+        "orderId": orderId, // Thêm orderId vào dữ liệu
       };
 
-      // Lưu dữ liệu với orderId làm ID của tài liệu
-      await ordersCollection.doc(orderId.toString()).set(orderData);
+      // Lưu dữ liệu với orderId là ID của tài liệu
+      await ordersCollection.doc(orderId).set(orderData);
+
       print('Order with ID $orderId added successfully!');
     } catch (e) {
       print('Error adding order: $e');
     }
   }
+
+
 
 }

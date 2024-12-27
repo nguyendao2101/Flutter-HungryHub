@@ -45,8 +45,9 @@ class _PayState extends State<Pay> {
     {'id': '2', 'name': 'Payment via VNPay'},
     {'id': '3', 'name': 'Payment via Stripe'},
   ];
-  String responseCode = '';
-  List<String> idProduct = [];
+  String responseCode = '00';
+  String imageURL = '';
+  String imageFace = '';
   List<int> quantities = [];
   List<String> nameProduct = []; // Sửa kiểu dữ liệu của nameProduct thành List<String>
 
@@ -58,7 +59,12 @@ class _PayState extends State<Pay> {
     // Sửa việc chuyển đổi `Name` sang kiểu String
     quantities = widget.product.map<int>((item) => item['Quantity'] ?? 0).toList();
     nameProduct = widget.product.map<String>((item) => item['Name'] ?? '').toList(); // Sửa kiểu dữ liệu thành String
-    idProduct = widget.product.map<String>((item) => item['id'] ?? '').toList(); // Sửa kiểu dữ liệu thành String
+    imageURL = widget.product.isNotEmpty
+        ? (widget.product[0]['ImageUrl'] ?? '') // Lấy giá trị đầu tiên hoặc rỗng
+        : '';
+    imageFace = widget.product.isNotEmpty
+        ? (widget.product[0]['ImageUrlFacebook'] ?? '') // Lấy giá trị đầu tiên hoặc rỗng
+        : '';
   }
 
 
@@ -570,58 +576,87 @@ class _PayState extends State<Pay> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 child: BasicAppButton(
-                    onPressed: (){
-                      if(selectedPaymentMethod.value?['id'] == '2'){
-                        onPayment(total);
-                        if(responseCode == '00'){
-                          _showPaymentMethod(context, selectedPaymentMethod);
-                          controllerGetData.addOrderToFirestore(storeId: selectedStore.value!['id'], deliveryAddress: selectedLocationName, placeOfPurchase: selectedStore.value!['Name'], paymentMethod: selectedPaymentMethod.value?['name'],
-                              listProducts: [
-                                for (int i = 0; i < quantities.length; i++)
-                                  {
-                                    "nameProduct": nameProduct[i],
-                                    "quantities": quantities[i],
-                                  },
-                              ],
-                              total: total);
-                              // for (var singleProduct in widget.product) {
-                              //    controllerHome.addToPurchasedCart(singleProduct);
-                              // }
-                        }
-                        if(responseCode != '00')
-                          _showPaymentMethodFail(context, selectedPaymentMethod);
-                      } else if(selectedPaymentMethod.value?['id'] == '3'){
+                  onPressed: () async {
+                    // Debug giá trị trước khi xử lý
+                    print('Selected Payment Method: ${selectedPaymentMethod.value}');
+                    print('Response Code before payment: $responseCode');
+
+                    if (selectedPaymentMethod.value?['id'] == '2') {
+                      await onPayment(total);
+                      if (responseCode == '00') {
                         _showPaymentMethod(context, selectedPaymentMethod);
-                        controllerGetData.addOrderToFirestore(storeId: selectedStore.value!['id'], deliveryAddress: selectedLocationName, placeOfPurchase: selectedStore.value!['Name'], paymentMethod: selectedPaymentMethod.value?['name'],
+                        await controllerGetData.addOrderToFirestore(
+                          storeId: selectedStore.value!['id'],
+                          userId: controller.userId.toString(),
+                          deliveryAddress: selectedLocationName,
+                          placeOfPurchase: selectedStore.value!['Name'],
+                          paymentMethod: selectedPaymentMethod.value?['name'],
                           listProducts: [
                             for (int i = 0; i < quantities.length; i++)
                               {
                                 "nameProduct": nameProduct[i],
                                 "quantities": quantities[i],
+                                "imageURL": imageURL,
+                                "imageFace": imageFace
                               },
                           ],
                           total: total,
                         );
                       } else {
-                        _showPaymentMethod(context, selectedPaymentMethod);
-                        controllerGetData.addOrderToFirestore(storeId: selectedStore.value!['id'], deliveryAddress: selectedLocationName, placeOfPurchase: selectedStore.value!['Name'], paymentMethod: selectedPaymentMethod.value?['name'],
-                          listProducts: [
-                            for (int i = 0; i < quantities.length; i++)
-                              {
-                                "nameProduct": nameProduct[i],
-                                "quantities": quantities[i],
-                              },
-                          ],
-                          total: total,
-                        );
-                        controllerHome.addAllToPurchasedCart(widget.product);
-                        // for (var singleProduct in widget.product) {
-                        //   controllerHome.addToPurchasedCart(singleProduct);
-                        //   print('so luong duoc them vao la: $singleProduct');
-                        // }
+                        _showPaymentMethodFail(context, selectedPaymentMethod);
                       }
-                    },
-                    title: 'Continue to payment', sizeTitle: 16, height: 62, radius: 12, colorButton: const Color(0xffFF7622), fontW: FontWeight.w500,),
+                    } else if (selectedPaymentMethod.value?['id'] == '3') {
+                      _showPaymentMethod(context, selectedPaymentMethod);
+                      await controllerGetData.addOrderToFirestore(
+                        storeId: selectedStore.value!['id'],
+                        userId: controller.userId.toString(),
+                        deliveryAddress: selectedLocationName,
+                        placeOfPurchase: selectedStore.value!['Name'],
+                        paymentMethod: selectedPaymentMethod.value?['name'],
+                        listProducts: [
+                          for (int i = 0; i < quantities.length; i++)
+                            {
+                              "nameProduct": nameProduct[i],
+                              "quantities": quantities[i],
+                              "imageURL": imageURL,
+                              "imageFace": imageFace
+                            },
+                        ],
+                        total: total,
+                      );
+                    } else {
+                      _showPaymentMethod(context, selectedPaymentMethod);
+                      await controllerGetData.addOrderToFirestore(
+                        storeId: selectedStore.value!['id'],
+                        userId: controller.userId.toString(),
+                        deliveryAddress: selectedLocationName,
+                        placeOfPurchase: selectedStore.value!['Name'],
+                        paymentMethod: selectedPaymentMethod.value?['name'],
+                        listProducts: [
+                          for (int i = 0; i < quantities.length; i++)
+                            {
+                              "nameProduct": nameProduct[i],
+                              "quantities": quantities[i],
+                              "imageURL": imageURL,
+                              "imageFace": imageFace
+                            },
+                        ],
+                        total: total,
+                      );
+                      controllerHome.addAllToPurchasedCart(widget.product);
+                    }
+
+                    // Debug sau khi xử lý
+                    print('Response Code after payment: $responseCode');
+                  },
+                  title: 'Continue to payment',
+                  sizeTitle: 16,
+                  height: 62,
+                  radius: 12,
+                  colorButton: const Color(0xffFF7622),
+                  fontW: FontWeight.w500,
+                ),
+
               ),
 
             ],
@@ -742,54 +777,6 @@ class _PayState extends State<Pay> {
                       ],
                     ),
                   ),
-                  // if (selectedPaymentMethod.value?['id'] == '2')
-                  //   Align(
-                  //     alignment: Alignment.center,
-                  //     child: Column(
-                  //       children: [
-                  //         // Add a check icon for visual confirmation
-                  //         const SizedBox(height: 24),
-                  //         Image.asset(responseCode == '00' ? ImageAsset.check : ImageAsset.remove, height: 125,),
-                  //         const SizedBox(height: 64),
-                  //
-                  //         const Text(
-                  //           'Your order has been confirmed by HungruHub.',
-                  //           style: TextStyle(
-                  //             fontSize: 18,
-                  //             fontWeight: FontWeight.w500,
-                  //             fontFamily: 'Poppins',
-                  //             color: Colors.black87,
-                  //           ),
-                  //           textAlign: TextAlign.center,
-                  //         ),
-                  //         const SizedBox(height: 48),
-                  //         // Button to go to Order Tracking
-                  //         TextButton(
-                  //           onPressed: () {
-                  //             // Get.to(() => const OrderTracking());
-                  //             setState(() {
-                  //               responseCode == '00';
-                  //             });
-                  //           },
-                  //           child: const Text(
-                  //             'Order Tracking',
-                  //             style: TextStyle(
-                  //               fontSize: 16,
-                  //               fontWeight: FontWeight.w500,
-                  //               color: Colors.white,
-                  //             ),
-                  //           ),
-                  //           style: TextButton.styleFrom(
-                  //             backgroundColor: const Color(0xffE03137),
-                  //             padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 40),
-                  //             shape: RoundedRectangleBorder(
-                  //               borderRadius: BorderRadius.circular(8),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
                   const SizedBox(height: 16),
                 ],
               ),
@@ -856,7 +843,7 @@ class _PayState extends State<Pay> {
                           // Button to go to Order Tracking
                           TextButton(
                             onPressed: () {
-                              Get.to(() => const OrderTracking());
+                              Get.to(() => const OrderTracking(initialIndex: 0,));
                             },
                             child: const Text(
                               'Order Tracking',
@@ -936,33 +923,32 @@ class _PayState extends State<Pay> {
   }
   Future<void> onPayment(double amount) async {
     final paymentUrl = VNPAYFlutter.instance.generatePaymentUrl(
-      url: 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html', //vnpay url, default is https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+      url: 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html',
       version: '2.0.1',
-      tmnCode: 'YLLVXBWY', //vnpay tmn code, get from vnpay
+      tmnCode: 'YLLVXBWY',
       txnRef: DateTime.now().millisecondsSinceEpoch.toString(),
-      orderInfo: 'Pay $amount VND', //order info
-      amount: amount, // Sử dụng amount từ tham số truyền vào
-      returnUrl: 'https://sandbox.vnpayment.vn/merchant_webapi/api/transaction', //https://sandbox.vnpayment.vn/apis/docs/huong-dan-tich-hop/#code-returnurl
+      orderInfo: 'Pay $amount VND',
+      amount: amount,
+      returnUrl: 'https://sandbox.vnpayment.vn/merchant_webapi/api/transaction',
       ipAdress: '192.168.10.10',
-      vnpayHashKey: '1J9MHQHA5NK9C4J3D26CZO1HAPO02IJY', //vnpay hash key, get from vnpay
-      vnPayHashType: VNPayHashType.HMACSHA512, //hash type. Default is HMACSHA512, you can chang it in: https://sandbox.vnpayment.vn/merchantv2,
+      vnpayHashKey: '1J9MHQHA5NK9C4J3D26CZO1HAPO02IJY',
+      vnPayHashType: VNPayHashType.HMACSHA512,
       vnpayExpireDate: DateTime.now().add(const Duration(hours: 1)),
     );
+
     await VNPAYFlutter.instance.show(
       paymentUrl: paymentUrl,
       onPaymentSuccess: (params) {
-        setState(() {
-          responseCode = params['vnp_ResponseCode'] ?? 'No Response Code';
-        });
-        // Print the response to the console
-        print('Payment Success: $params');
+        print('Params on success: $params');
+        responseCode = params.containsKey('vnp_ResponseCode')
+            ? params['vnp_ResponseCode']
+            : 'No Response Code';
+        print('Response Code on success: $responseCode');
       },
       onPaymentError: (params) {
-        setState(() {
-          responseCode = 'Error';
-        });
-        // Print the error to the console
-        print('Payment Error: $params');
+        print('Params on error: $params');
+        responseCode = 'Error';
+        print('Response Code on error: $responseCode');
       },
     );
   }

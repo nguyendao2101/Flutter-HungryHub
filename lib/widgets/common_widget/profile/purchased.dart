@@ -81,7 +81,6 @@ class _PurchasedState extends State<Purchased> {
                                   fontWeight: FontWeight.w500,
                                   fontFamily: 'Poppins',
                                 ),),
-                                const Evaluate(height: 24, width: 71),
                               ],
                             ),
                           ],

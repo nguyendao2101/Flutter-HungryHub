@@ -107,7 +107,7 @@ class _SignUpViewState extends State<SignUpView> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         padding: const EdgeInsets.symmetric(
-                            vertical: 15, horizontal: 145),
+                            vertical: 15, horizontal: 100),
                       ),
                       child: controller.isLoading.value
                           ? const CircularProgressIndicator(
