@@ -5,10 +5,13 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hungry_hub/view_model/home_view_model.dart';
 import 'package:flutter_hungry_hub/widgets/common/image_extention.dart';
+import 'package:flutter_hungry_hub/widgets/common_widget/food_detail/rating_star.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 import '../../../model/location/location_model.dart';
+import '../../../view/test.dart';
+import '../../../view_model/elvaluate_product_view_model.dart';
 import '../button/bassic_button.dart';
 import '../text/title_see_more.dart';
 
@@ -24,6 +27,18 @@ class FoodDetail extends StatefulWidget {
 
 class _FoodDetailState extends State<FoodDetail> {
   final controller = Get.put(HomeViewModel());
+  final controllerEvalua = Get.put(ElvaluateProductViewModel());
+  final TextEditingController _commentController = TextEditingController(); // Controller cho TextField
+  double _rating = 0.0; // Biến lưu đánh giá sao
+  late Future<double> averageRating; // Lưu trữ giá trị trung bình đánh giá
+  late Future<List<Map<String, String>>> evaluations; // Lưu trữ danh sách đánh giá
+
+  @override
+  void initState() {
+    super.initState();
+    averageRating = controllerEvalua.getAverageEvaluationByProduct(widget.productDetail['id']);
+    evaluations = controllerEvalua.getEvaluationsByProduct(widget.productDetail['id']);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -156,6 +171,42 @@ class _FoodDetailState extends State<FoodDetail> {
                   ),
                 ],
               ),
+
+              const SizedBox(height: 16,),
+              FutureBuilder<double>(
+                future: averageRating,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  }
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Average Rating:',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: List.generate(5, (index) {
+                          return Icon(
+                            index < snapshot.data! ? Icons.star : Icons.star_border,
+                            color: Colors.orange,
+                            size: 30,
+                          );
+                        }),
+                      ),
+                    ],
+                  );
+                },
+              ),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -174,6 +225,71 @@ class _FoodDetailState extends State<FoodDetail> {
               const TitleSeeMore(
                 title: 'Product Review',
               ),
+              FutureBuilder<List<Map<String, String>>>(
+                future: evaluations,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  }
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: snapshot.data!
+                        .map(
+                          (eval) => ListTile(
+                        title: Column(
+                          children: [
+                            const Divider(),
+                            Row(
+                              children: [
+                                Container(
+                                  width: 50,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.grey.shade300,
+                                  ),
+                                  child: ClipOval(
+                                    child: Image.asset(
+                                      ImageAsset.users,
+                                      height: 40,
+                                      width: 40,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 20,),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(eval['nameUser'] ?? 'Unknown', style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Color(0xff32343E),
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Poppins',
+                                    ),),
+                                    Text(eval['comment'] ?? 'No comment', style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Color(0xff32343E),
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Poppins',
+                                    ),)
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const Divider(),
+                          ],
+                        ),
+                      ),
+                    )
+                        .toList(),
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -190,5 +306,19 @@ class _FoodDetailState extends State<FoodDetail> {
         style: const TextStyle(fontSize: 12),
       ),
     );
+  }
+  double _getRatingValue(dynamic ratingValue) {
+    if (ratingValue == null) {
+      return 0.0; // Trả về giá trị sao mặc định nếu không có đánh giá
+    }
+
+    // Kiểm tra kiểu dữ liệu của ratingValue và chuyển đổi
+    if (ratingValue is double) {
+      return ratingValue;
+    } else if (ratingValue is int) {
+      return ratingValue.toDouble();
+    }
+
+    return 0.0; // Trả về giá trị mặc định nếu không thể chuyển đổi
   }
 }

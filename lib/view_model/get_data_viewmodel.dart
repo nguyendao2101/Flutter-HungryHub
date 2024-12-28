@@ -260,4 +260,5 @@ class GetDataViewModel extends GetxController {
 
 
 
+
 }
