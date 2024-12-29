@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -87,6 +89,8 @@ class OrdersViewModel extends GetxController {
     }
   }
 
+
+// lấy thông tin order
   void _listenToOrders() {
     if (userId.isEmpty) return;
 
@@ -103,6 +107,66 @@ class OrdersViewModel extends GetxController {
       }
     });
   }
+
+  //xoa thong tin gio hang
+  void deleteOrder({required String itemId}) async {
+    if (userId.isEmpty) return;
+
+    final shoppingCartRef = _databaseReference.child('users/${userId.value}/ShoppingCart');
+
+    try {
+      final snapshot = await shoppingCartRef.get();
+
+      // In dữ liệu lấy được từ Firebase
+      print('Shopping cart snapshot: ${snapshot.value}');
+
+      // Kiểm tra xem có dữ liệu hay không
+      if (!snapshot.exists || snapshot.value == null) {
+        print('Shopping cart is empty or data is null.');
+        return;
+      }
+
+      // Kiểm tra kiểu dữ liệu của snapshot.value
+      if (snapshot.value is List) {
+        List<dynamic> cartItems = List<dynamic>.from(snapshot.value as List);
+        print('Shopping cart data is a list.');
+
+        bool itemFound = false;
+
+        // Duyệt qua từng item trong shopping cart
+        for (var cartItem in cartItems) {
+          if (cartItem is String) {
+            // Chuyển chuỗi JSON thành Map
+            Map<String, dynamic> cartItemMap = jsonDecode(cartItem);
+
+            print('Checking item: ${cartItemMap['id']} against itemId: $itemId');
+
+            // So sánh với itemId sau khi loại bỏ dấu cách
+            if (cartItemMap['id'].toString().trim() == itemId.trim()) {
+              // Xóa sản phẩm có id trùng
+              await shoppingCartRef.child(cartItemMap['id']).remove();
+              itemFound = true;
+              print('Item with ID $itemId has been removed successfully.');
+              break; // Thoát vòng lặp khi đã xóa xong
+            }
+          }
+        }
+
+        if (!itemFound) {
+          print('Item with ID $itemId not found in shopping cart.');
+        }
+      } else {
+        print('Shopping cart data is not in the expected format (List).');
+      }
+    } catch (error) {
+      print('Failed to remove item with ID $itemId: $error');
+    }
+  }
+
+
+
+
+  //
   Future<Map<String, String>> fetchLocationsFromFirebase() async {
     try {
       User? currentUser = FirebaseAuth.instance.currentUser;

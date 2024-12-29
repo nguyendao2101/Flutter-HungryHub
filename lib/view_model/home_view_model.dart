@@ -154,7 +154,7 @@ class HomeViewModel extends GetxController {
     }
   }
 
-
+  // them
   Future<void> addToShoppingCart(Map<String, dynamic> product) async {
     try {
       User? currentUser = FirebaseAuth.instance.currentUser;
@@ -208,6 +208,61 @@ class HomeViewModel extends GetxController {
       );
     }
   }
+  //xoa
+  Future<void> removeFromShoppingCart(Map<String, dynamic> product) async {
+    try {
+      User? currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser == null) {
+        throw Exception("No user is signed in.");
+      }
+
+      String userId = currentUser.uid;
+
+      // Lấy danh sách ShoppingCart hiện tại từ Firebase
+      final snapshot = await _database.child('users/$userId/ShoppingCart').get();
+      List<dynamic> currentCart = [];
+
+      if (snapshot.exists && snapshot.value is List) {
+        currentCart = List<dynamic>.from(snapshot.value as List);
+      }
+
+      // Kiểm tra xem sản phẩm có trong giỏ hàng không
+      bool isProductInCart = currentCart.any((item) => item['id'] == product['id']); // Kiểm tra dựa trên 'id' của sản phẩm
+
+      if (isProductInCart) {
+        // Xóa sản phẩm khỏi danh sách giỏ hàng
+        currentCart.removeWhere((item) => item['id'] == product['id']);
+
+        // Ghi danh sách cập nhật lên Firebase
+        await _database.child('users/$userId/ShoppingCart').set(currentCart);
+
+        // Cập nhật lại shoppingCart và thông báo thành công
+        shoppingCart.clear();
+        shoppingCart.addAll(currentCart.cast<Map<String, dynamic>>()); // Cập nhật shoppingCart bằng cách cast lại dữ liệu
+        update(); // Cập nhật UI
+
+        Get.snackbar(
+          "Success",
+          "Product removed from ShoppingCart!",
+          snackPosition: SnackPosition.TOP,
+        );
+      } else {
+        Get.snackbar(
+          "Info",
+          "This product is not in your shopping cart.",
+          snackPosition: SnackPosition.TOP,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        "Failed to remove product from ShoppingCart. Please try again.",
+        snackPosition: SnackPosition.TOP,
+      );
+    }
+  }
+
 
 
 
