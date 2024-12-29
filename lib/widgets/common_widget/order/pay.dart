@@ -584,6 +584,7 @@ class _PayState extends State<Pay> {
                     if (selectedPaymentMethod.value?['id'] == '2') {
                       await onPayment(total);
                       if (responseCode == '00') {
+                        await Future.delayed(Duration(seconds: 2));
                         _showPaymentMethod(context, selectedPaymentMethod);
                         await controllerGetData.addOrderToFirestore(
                           storeId: selectedStore.value!['id'],
@@ -603,6 +604,7 @@ class _PayState extends State<Pay> {
                           total: total,
                         );
                       } else {
+                        await Future.delayed(Duration(seconds: 2));
                         _showPaymentMethodFail(context, selectedPaymentMethod);
                       }
                     } else if (selectedPaymentMethod.value?['id'] == '3') {
