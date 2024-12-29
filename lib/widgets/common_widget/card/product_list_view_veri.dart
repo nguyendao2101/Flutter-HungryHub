@@ -8,11 +8,16 @@ import '../../common/image_extention.dart';
 import '../food_detail/food_detail.dart';
 import '../text/truncated_text.dart';
 
-class ProductCardVeri extends StatelessWidget {
+class ProductCardVeri extends StatefulWidget {
   final Map<String, dynamic> product;
 
   const ProductCardVeri({Key? key, required this.product}) : super(key: key);
 
+  @override
+  State<ProductCardVeri> createState() => _ProductCardVeriState();
+}
+
+class _ProductCardVeriState extends State<ProductCardVeri> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(HomeViewModel());
@@ -22,7 +27,7 @@ class ProductCardVeri extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => FoodDetail(
-              productDetail: product,
+              productDetail: widget.product,
             ),
           ),
         );
@@ -39,7 +44,7 @@ class ProductCardVeri extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(15),
                   child: Image.network(
-                    product['ImageUrl'] ?? '',
+                    widget.product['ImageUrl'] ?? '',
                     width: 201,
                     height: 170,
                     fit: BoxFit.fill,
@@ -50,7 +55,7 @@ class ProductCardVeri extends StatelessWidget {
                   right: 10,
                   child: GestureDetector(
                     onTap: () {
-                      controller.toggleFavorite(product);
+                      controller.toggleFavorite(widget.product);
                     },
                     child: Obx(
                           () => Container(
@@ -67,10 +72,10 @@ class ProductCardVeri extends StatelessWidget {
                         ),
                         padding: const EdgeInsets.all(6), // Khoảng cách bên trong
                         child: Icon(
-                          controller.isFavorite(product)
+                          controller.isFavorite(widget.product)
                               ? Icons.favorite
                               : Icons.favorite_border,
-                          color: controller.isFavorite(product)
+                          color: controller.isFavorite(widget.product)
                               ? Colors.red
                               : Colors.grey,
                           size: 24, // Kích thước icon
@@ -87,7 +92,7 @@ class ProductCardVeri extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TruncatedText(
-                    text: product['Name'],
+                    text: widget.product['Name'],
                     maxWidth: 190,
                     style: const TextStyle(
                       fontSize: 16,
@@ -97,7 +102,7 @@ class ProductCardVeri extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Giá: ${product['Price']} VND',
+                    'Giá: ${widget.product['Price']} VND',
                     style: const TextStyle(
                       fontSize: 16,
                       color: Color(0xff32343E),
@@ -113,7 +118,7 @@ class ProductCardVeri extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Evaluate(height: 24, width: 71),
+                  Evaluate(height: 24, width: 71, productDetail: widget.product ?? {},),
                   const Text(
                     ' • FreeShip',
                     style: TextStyle(
@@ -126,7 +131,7 @@ class ProductCardVeri extends StatelessWidget {
                   IconButton(
                     icon: const Icon(Icons.add_shopping_cart),
                     onPressed: () {
-                      controller.addToShoppingCart(product);
+                      controller.addToShoppingCart(widget.product);
                     },
                   ),
                 ],

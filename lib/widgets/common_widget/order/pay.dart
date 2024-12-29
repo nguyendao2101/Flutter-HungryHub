@@ -130,7 +130,7 @@ class _PayState extends State<Pay> {
                 itemBuilder: (context, index) {
                   final item = widget.product[index];
                   return Container(
-                    height: 100,
+                    height: 120,
                     margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -180,7 +180,7 @@ class _PayState extends State<Pay> {
                                   fontFamily: 'Poppins',
                                 ),
                               ),
-                              const Evaluate(height: 24, width: 71),
+                              Evaluate(height: 24, width: 71, productDetail: item ?? {},),
                             ],
                           ),
                           const SizedBox(height: 8),

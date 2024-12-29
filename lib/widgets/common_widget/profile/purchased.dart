@@ -43,7 +43,7 @@ class _PurchasedState extends State<Purchased> {
                   return Stack(
                     children: [
                       Container(
-                        margin: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 12),
+                        margin: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 12),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
@@ -141,7 +141,7 @@ class _PurchasedState extends State<Purchased> {
                       // Nút Đánh Giá Sản Phẩm (Được đặt ra ngoài Container)
                       Positioned(
                         right: 14,
-                        top: 0, // Đưa nút lên ngoài Container
+                        top: -4, // Đưa nút lên ngoài Container
                         child: ElevatedButton(
                           onPressed: () {
                             // Chuyển sang trang đánh giá sản phẩm

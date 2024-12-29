@@ -7,10 +7,15 @@ import '../evaluate/evaluate.dart';
 import '../food_detail/food_detail.dart';
 import '../text/truncated_text.dart';
 
-class ProductGridView extends StatelessWidget {
+class ProductGridView extends StatefulWidget {
   final Map<String, dynamic> product;
   const ProductGridView({super.key, required this.product});
 
+  @override
+  State<ProductGridView> createState() => _ProductGridViewState();
+}
+
+class _ProductGridViewState extends State<ProductGridView> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(HomeViewModel());
@@ -19,7 +24,7 @@ class ProductGridView extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => FoodDetail(productDetail: product,),
+            builder: (context) => FoodDetail(productDetail: widget.product,),
           ),
         );
       },
@@ -37,7 +42,7 @@ class ProductGridView extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(15),
                     child: Image.network(
-                      product['ImageUrl'] ?? '',
+                      widget.product['ImageUrl'] ?? '',
                       width: double.infinity,
                       height: 95,
                       fit: BoxFit.fill,
@@ -48,7 +53,7 @@ class ProductGridView extends StatelessWidget {
                     right: 10,
                     child: GestureDetector(
                       onTap: () {
-                        controller.toggleFavorite(product);
+                        controller.toggleFavorite(widget.product);
                       },
                       child: Obx(
                             () => Container(
@@ -65,10 +70,10 @@ class ProductGridView extends StatelessWidget {
                           ),
                           padding: const EdgeInsets.all(6), // Khoảng cách bên trong
                           child: Icon(
-                            controller.isFavorite(product)
+                            controller.isFavorite(widget.product)
                                 ? Icons.favorite
                                 : Icons.favorite_border,
-                            color: controller.isFavorite(product)
+                            color: controller.isFavorite(widget.product)
                                 ? Colors.red
                                 : Colors.grey,
                             size: 24, // Kích thước icon
@@ -85,7 +90,7 @@ class ProductGridView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TruncatedText(
-                      text: product['Name'],
+                      text: widget.product['Name'],
                       maxWidth: 180,
                       style: const TextStyle(
                         fontSize: 16,
@@ -95,7 +100,7 @@ class ProductGridView extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Giá: ${product['Price']} VND',
+                      'Giá: ${widget.product['Price']} VND',
                       style: const TextStyle(
                         fontSize: 16,
                         color: Color(0xff32343E),
@@ -108,11 +113,11 @@ class ProductGridView extends StatelessWidget {
               ),
               Column(
                 children: [
-                  const Row(
+                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Evaluate(height: 24, width: 71),
-                      Text(
+                      Evaluate(height: 24, width: 71, productDetail: widget.product ?? {},),
+                      const Text(
                         ' • FreeShip',
                         style: TextStyle(
                           fontSize: 16,
@@ -126,7 +131,7 @@ class ProductGridView extends StatelessWidget {
                   IconButton(
                     icon: const Icon(Icons.add_shopping_cart),
                     onPressed: () {
-                      controller.addToShoppingCart(product);
+                      controller.addToShoppingCart(widget.product);
                     },
                   ),
                 ],

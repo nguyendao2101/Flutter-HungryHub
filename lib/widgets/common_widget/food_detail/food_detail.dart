@@ -239,57 +239,70 @@ class _FoodDetailState extends State<FoodDetail> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: snapshot.data!
                         .map(
-                          (eval) => ListTile(
-                        title: Column(
-                          children: [
-                            const Divider(),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.grey.shade300,
-                                  ),
-                                  child: ClipOval(
-                                    child: Image.asset(
-                                      ImageAsset.users,
-                                      height: 40,
-                                      width: 40,
-                                      fit: BoxFit.cover,
-                                    ),
+                          (eval) => Column(
+                        children: [
+                          const Divider(),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start, // Đảm bảo căn chỉnh các thành phần theo trục trên cùng
+                            children: [
+                              Container(
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.grey.shade300,
+                                ),
+                                child: ClipOval(
+                                  child: Image.asset(
+                                    ImageAsset.users,
+                                    height: 40,
+                                    width: 40,
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
-                                const SizedBox(width: 20,),
-                                Column(
+                              ),
+                              const SizedBox(width: 20),
+                              Expanded( // Đặt nội dung văn bản trong `Expanded` để hỗ trợ xuống dòng
+                                child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(eval['nameUser'] ?? 'Unknown', style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Color(0xff32343E),
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: 'Poppins',
-                                    ),),
-                                    Text(eval['comment'] ?? 'No comment', style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Color(0xff32343E),
-                                      fontWeight: FontWeight.w400,
-                                      fontFamily: 'Poppins',
-                                    ),)
+                                    Text(
+                                      eval['nameUser'] ?? 'Unknown',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        color: Color(0xff32343E),
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: 'Poppins',
+                                      ),
+                                      overflow: TextOverflow.clip, // Hiển thị toàn bộ nội dung
+                                      softWrap: true, // Cho phép xuống dòng
+                                    ),
+                                    const SizedBox(height: 5), // Thêm khoảng cách giữa các văn bản
+                                    Text(
+                                      eval['comment'] ?? 'No comment',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        color: Color(0xff32343E),
+                                        fontWeight: FontWeight.w400,
+                                        fontFamily: 'Poppins',
+                                      ),
+                                      overflow: TextOverflow.clip, // Hiển thị toàn bộ nội dung
+                                      softWrap: true, // Cho phép xuống dòng
+                                    ),
                                   ],
                                 ),
-                              ],
-                            ),
-                            const Divider(),
-                          ],
-                        ),
+                              ),
+                            ],
+                          ),
+                          const Divider(),
+                        ],
                       ),
                     )
                         .toList(),
                   );
                 },
               ),
+
             ],
           ),
         ),
