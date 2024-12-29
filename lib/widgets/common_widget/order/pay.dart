@@ -579,10 +579,11 @@ class _PayState extends State<Pay> {
                   onPressed: () async {
                     // Debug giá trị trước khi xử lý
                     print('Selected Payment Method: ${selectedPaymentMethod.value}');
-                    print('Response Code before payment: $responseCode');
+                    print('Response Code before payment1: $responseCode');
 
                     if (selectedPaymentMethod.value?['id'] == '2') {
                       await onPayment(total);
+                      print('Response Code after payment2: $responseCode');
                       if (responseCode == '00') {
                         await Future.delayed(Duration(seconds: 2));
                         _showPaymentMethod(context, selectedPaymentMethod);
@@ -603,9 +604,13 @@ class _PayState extends State<Pay> {
                           ],
                           total: total,
                         );
+                        controllerHome.addAllToPurchasedCart(widget.product);
+                        controllerHome.removeAllFromPurchasedCart(widget.product);
                       } else {
                         await Future.delayed(Duration(seconds: 2));
                         _showPaymentMethodFail(context, selectedPaymentMethod);
+                        controllerHome.addAllToPurchasedCart(widget.product);
+                        controllerHome.removeAllFromPurchasedCart(widget.product);
                       }
                     } else if (selectedPaymentMethod.value?['id'] == '3') {
                       _showPaymentMethod(context, selectedPaymentMethod);
@@ -626,6 +631,8 @@ class _PayState extends State<Pay> {
                         ],
                         total: total,
                       );
+                      controllerHome.addAllToPurchasedCart(widget.product);
+                      controllerHome.removeAllFromPurchasedCart(widget.product);
                     } else {
                       _showPaymentMethod(context, selectedPaymentMethod);
                       await controllerGetData.addOrderToFirestore(
@@ -646,6 +653,7 @@ class _PayState extends State<Pay> {
                         total: total,
                       );
                       controllerHome.addAllToPurchasedCart(widget.product);
+                      controllerHome.removeAllFromPurchasedCart(widget.product);
                     }
 
                     // Debug sau khi xử lý

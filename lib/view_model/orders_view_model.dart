@@ -26,7 +26,7 @@ class OrdersViewModel extends GetxController {
   void onInit() {
     super.onInit();
     _initializeUserId();
-    _listenToOrders();
+    listenToOrders();
     fetchCoupons();
     fetchStores();
     fetchLocationsFromFirebase();
@@ -91,8 +91,11 @@ class OrdersViewModel extends GetxController {
 
 
 // lấy thông tin order
-  void _listenToOrders() {
+  Future<void> listenToOrders() async {
     if (userId.isEmpty) return;
+
+    // Chờ một chút để giả lập một thao tác bất đồng bộ
+    await Future.delayed(Duration(milliseconds: 500)); // Tùy chỉnh độ trễ nếu cần
 
     _databaseReference.child('users/${userId.value}/ShoppingCart').onValue.listen((event) {
       if (event.snapshot.exists && event.snapshot.value is List) {
@@ -107,6 +110,7 @@ class OrdersViewModel extends GetxController {
       }
     });
   }
+
 
   //xoa thong tin gio hang
   void deleteOrder({required String itemId}) async {

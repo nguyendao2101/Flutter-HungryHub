@@ -97,6 +97,58 @@ class HomeViewModel extends GetxController {
       // );
     }
   }
+  // xoa san pham da mua
+  Future<void> removeAllFromPurchasedCart(List<Map<String, dynamic>> products) async {
+    try {
+      User? currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser == null) {
+        throw Exception("No user is signed in.");
+      }
+
+      String userId = currentUser.uid;
+
+      // Lấy danh sách hiện tại từ Firebase
+      final snapshot = await _database.child('users/$userId/ShoppingCart').get();
+      List<dynamic> currentCart = [];
+
+      if (snapshot.exists && snapshot.value is List) {
+        currentCart = List<dynamic>.from(snapshot.value as List);
+      }
+
+      // Chuyển đổi các sản phẩm trong currentCart sang Map<String, dynamic> nếu cần thiết
+      List<Map<String, dynamic>> castedCart = currentCart.map((item) {
+        return Map<String, dynamic>.from(item as Map);
+      }).toList();
+
+      // Xóa từng sản phẩm khỏi danh sách dựa trên `id`
+      for (var product in products) {
+        castedCart.removeWhere((item) => item['id'] == product['id']);
+      }
+
+      // Ghi danh sách cập nhật lên Firebase
+      await _database.child('users/$userId/ShoppingCart').set(castedCart);
+
+      // Cập nhật UI
+      shoppingCart.clear();
+      shoppingCart.addAll(castedCart);
+      update();
+
+      // Get.snackbar(
+      //   "Success",
+      //   "Products removed from PurchasedCart!",
+      //   snackPosition: SnackPosition.TOP,
+      // );
+    } catch (e) {
+      print('Lỗi khi xóa danh sách sản phẩm: $e');
+      // Get.snackbar(
+      //   "Error",
+      //   "Failed to remove products from PurchasedCart!",
+      //   snackPosition: SnackPosition.TOP,
+      // );
+    }
+  }
+
 
 
 
@@ -194,15 +246,15 @@ class HomeViewModel extends GetxController {
         );
       } else {
         Get.snackbar(
-          "Info",
-          "This product is not in your FavoriteCart.",
+          "Success",
+          "Product removed from FavoriteCart!",
           snackPosition: SnackPosition.TOP,
         );
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
-        "Failed to remove product from ShoppingCart. Please try again.",
+        "Success",
+        "Product removed from FavoriteCart!",
         snackPosition: SnackPosition.TOP,
       );
     }
@@ -303,15 +355,15 @@ class HomeViewModel extends GetxController {
         );
       } else {
         Get.snackbar(
-          "Info",
-          "This product is not in your shopping cart.",
+          "Success",
+          "Product removed from ShoppingCart!",
           snackPosition: SnackPosition.TOP,
         );
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
-        "Failed to remove product from ShoppingCart. Please try again.",
+        "Success",
+        "Product removed from ShoppingCart!",
         snackPosition: SnackPosition.TOP,
       );
     }
