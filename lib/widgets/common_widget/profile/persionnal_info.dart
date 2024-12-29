@@ -12,7 +12,7 @@ class PersonalInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ProfileViewModel());
-
+    
     return Scaffold(
       appBar: AppBarProfile(title: 'Personal Info'),
       body: SingleChildScrollView(

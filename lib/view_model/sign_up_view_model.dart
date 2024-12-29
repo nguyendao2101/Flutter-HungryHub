@@ -21,6 +21,8 @@ class SignUpViewModel extends GetxController {
   late String address;
   late String sex;
   late String numberPhone;
+  late String x;
+  
 
   RxBool isEntryPasswordObscured = true.obs;
   RxBool isObscured = true.obs;
@@ -85,6 +87,7 @@ class SignUpViewModel extends GetxController {
       String addRess,
       String sex,
       String numberPhone,
+      
       Function onSuccess,
       Function(String) onError) {
     _firAuth
@@ -214,4 +217,12 @@ class SignUpViewModel extends GetxController {
     numberPhone = '';
     formKey.currentState?.reset();
   }
+
+  void onChangeX(String valueX) {
+    x = valueX;
+    formKey.currentState?.validate();
+  }
+
+  
+
 }

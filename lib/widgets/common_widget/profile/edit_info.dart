@@ -26,6 +26,9 @@ class _EditInfoViewState extends State<EditInfoView> {
     final controller2=Get.put(OrdersViewModel());
     RxString user_id=controller2.userId;
 
+    final controller3 = Get.put(ProfileViewModel());
+    
+
     final fire = Get.put(FirAuth ());
 
     codeMail = controller.generateVerificationCode().toString();
@@ -106,7 +109,7 @@ class _EditInfoViewState extends State<EditInfoView> {
                                 verificationCode: codeMail.toString(),
                               ));*/
                           fire.updateUserInfo(user_id.value,controller.hoTen,controller.address,controller.sex,controller.numberPhone);
-                          
+                          controller3.reloadUserData();
                           Get.back();
                           
                         }

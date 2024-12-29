@@ -75,7 +75,7 @@ class _ProfileViewState extends State<ProfileView> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 15, bottom: 8),
-                    child: Text(
+                    child: Obx(() => Text(
                       controller.userData['fullName']?.toString() ?? 'User',
                       style: const TextStyle(
                         fontSize: 16,
@@ -83,7 +83,7 @@ class _ProfileViewState extends State<ProfileView> {
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Poppins',
                       ),
-                    ),
+                    )),
                   ),
                   const Text(
                     'Explore the food',

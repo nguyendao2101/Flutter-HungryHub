@@ -8,6 +8,7 @@ import '/widgets/common_widget/check_mail/check_mail2.dart';
 import 'package:flutter_hungry_hub/widgets/common_widget/profile/persionnal_info.dart';
 import 'package:flutter_hungry_hub/view_model/profile_view_model.dart';
 
+
 class EditEmailView extends StatefulWidget {
   const EditEmailView({super.key});
 
@@ -22,6 +23,7 @@ class _EditEmailViewState extends State<EditEmailView> {
   Widget build(BuildContext context) {
     final controller = Get.put(SignUpViewModel());
     codeMail = controller.generateVerificationCode().toString();
+    final controller5 = Get.put(ProfileViewModel());
     
     return SafeArea(
       child: Scaffold(
@@ -45,6 +47,8 @@ class _EditEmailViewState extends State<EditEmailView> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 16),
+                _formPassword2(controller),
                 const SizedBox(height: 32),
                 _formEmail(controller),
                 Padding(
@@ -58,6 +62,7 @@ class _EditEmailViewState extends State<EditEmailView> {
                           Get.to(() => CheckMail2(
                                 email: controller.email,
                                 verificationCode: codeMail.toString(),
+                                pass: controller.x,
                               ));
                         }
                       },
@@ -87,7 +92,64 @@ class _EditEmailViewState extends State<EditEmailView> {
       ),
     );
   }
-
+  Padding _formPassword2(SignUpViewModel controller) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+      child: Obx(
+        () => TextFormField(
+          obscureText: controller.isObscured.value,
+          style: const TextStyle(
+              color: Color(0xff939393),
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w500,
+              fontSize: 16),
+          decoration: InputDecoration(
+            labelText: 'Current Password',
+            labelStyle: const TextStyle(
+                color: Color(0xff939393),
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w500,
+                fontSize: 16),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: Colors.grey.shade400, width: 1),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.blue, width: 1),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.red, width: 1),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.redAccent, width: 1),
+            ),
+            filled: true,
+            fillColor: Colors.grey[200],
+            hintText: 'Current Password',
+            hintStyle: const TextStyle(
+                color: Color(0xff939393),
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w500,
+                fontSize: 16),
+            suffixIcon: GestureDetector(
+              onTap: () => controller.toggleObscureText(),
+              child: Icon(
+                controller.isObscured.value
+                    ? Icons.visibility_off
+                    : Icons.visibility,
+                color: Colors.grey.withOpacity(0.8),
+              ),
+            ),
+          ),
+          onChanged: controller.onChangeX,
+          validator: controller.validatorPassword,
+        ),
+      ),
+    );
+  }
   Padding _formEmail(SignUpViewModel controller) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),

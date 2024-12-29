@@ -181,7 +181,7 @@ class FirAuth {
     await _firebaseAuth.signOut();
     Get.to(() => const LoginView());
   }
-
+  //realtime
   void updateUserInfo(String userId, String hoTen, String addRess, String sex,String numberPhone
       ) {
     // Tạo đối tượng map với các trường dữ liệu cần cập nhật
@@ -202,6 +202,7 @@ class FirAuth {
       print("Error: $err");
     });
   }
+  //realtime
   void updateEmail(String userId, String email
       ) {
     // Tạo đối tượng map với các trường dữ liệu cần cập nhật

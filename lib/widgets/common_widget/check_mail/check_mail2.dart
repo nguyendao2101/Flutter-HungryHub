@@ -1,6 +1,8 @@
 // ignore_for_file: avoid_print
 
 import 'dart:async';
+import 'package:flutter_hungry_hub/view_model/profile_view_model.dart';
+
 import '../../../view_model/orders_view_model.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -9,16 +11,50 @@ import 'package:get/get.dart';
 import '../../../model/firebase/firebase_authencation.dart';
 import '../../../view/login_view.dart';
 import '../../../view_model/sign_up_view_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
+Future<void> updateEmail(
+    String currentEmail, String currentPassword, String newEmail) async {
+  try {
+    // Lấy người dùng hiện tại
+    User? user = FirebaseAuth.instance.currentUser;
+    print("Current Email: ${currentEmail}");
+    print("Password: ${currentPassword}");
+
+    if (user != null) {
+      // Tạo đối tượng EmailAuthCredential với email và mật khẩu hiện tại
+      AuthCredential credential = EmailAuthProvider.credential(
+        email: currentEmail,
+        password: currentPassword,
+      );
+
+      // Xác thực lại người dùng
+      await user.reauthenticateWithCredential(credential);
+
+      // Gửi email xác minh tới email mới
+      await user.verifyBeforeUpdateEmail(newEmail);
+      print("Verification email sent to: $newEmail");
+
+      // Thông báo cho người dùng
+      print("Please verify your new email address to complete the update.");
+
+    } else {
+      print("No user is logged in.");
+    }
+  } catch (e) {
+    print("Error updating email: $e");
+  }
+}
 class CheckMail2 extends StatefulWidget {
   final String email;
   
   final String verificationCode; // Mã xác minh từ controller
 
+  final String pass;
   const CheckMail2({
     super.key,
     required this.email,
-    
+    required this.pass,
     required this.verificationCode, // Thêm mã xác minh
   });
 
@@ -31,7 +67,7 @@ class _CheckMailState2 extends State<CheckMail2> {
   late String codeMail;
   late String verificationCode;
   final fire = Get.put(FirAuth ());
-  
+  final controller5 = Get.put(ProfileViewModel());
   
   late Timer _timer;
   int _remainingSeconds = 90; // Thời gian đếm ngược (90s)
@@ -104,6 +140,9 @@ class _CheckMailState2 extends State<CheckMail2> {
     } else if (inputCode == verificationCode) {
       controller.isLoading.value = true;
       fire.updateEmail(user_id.value,widget.email);
+
+      updateEmail(controller5.userData['email'],widget.pass,widget.email);
+
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Verification successful!'),
         backgroundColor: Colors.green,
