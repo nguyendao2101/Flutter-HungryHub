@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +47,7 @@ class _PayState extends State<Pay> {
     {'id': '2', 'name': 'Payment via VNPay'},
     {'id': '3', 'name': 'Payment via Stripe'},
   ];
-  String responseCode = '00';
+  String responseCode = '';
   String imageURL = '';
   String imageFace = '';
   List<int> quantities = [];
@@ -582,10 +584,11 @@ class _PayState extends State<Pay> {
                     print('Response Code before payment1: $responseCode');
 
                     if (selectedPaymentMethod.value?['id'] == '2') {
-                      await onPayment(total);
+                      await onPayment(total);  // Đảm bảo gọi và chờ onPayment thực hiện xong
                       print('Response Code after payment2: $responseCode');
+
                       if (responseCode == '00') {
-                        await Future.delayed(Duration(seconds: 2));
+                        await Future.delayed(Duration(seconds: 1));
                         _showPaymentMethod(context, selectedPaymentMethod);
                         await controllerGetData.addOrderToFirestore(
                           storeId: selectedStore.value!['id'],
@@ -607,7 +610,7 @@ class _PayState extends State<Pay> {
                         controllerHome.addAllToPurchasedCart(widget.product);
                         controllerHome.removeAllFromPurchasedCart(widget.product);
                       } else {
-                        await Future.delayed(Duration(seconds: 2));
+                        await Future.delayed(Duration(seconds: 1));
                         _showPaymentMethodFail(context, selectedPaymentMethod);
                         controllerHome.addAllToPurchasedCart(widget.product);
                         controllerHome.removeAllFromPurchasedCart(widget.product);
@@ -932,6 +935,9 @@ class _PayState extends State<Pay> {
     );
   }
   Future<void> onPayment(double amount) async {
+    // Sử dụng Completer để chờ kết quả trả về
+    final completer = Completer<void>();
+
     final paymentUrl = VNPAYFlutter.instance.generatePaymentUrl(
       url: 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html',
       version: '2.0.1',
@@ -954,13 +960,22 @@ class _PayState extends State<Pay> {
             ? params['vnp_ResponseCode']
             : 'No Response Code';
         print('Response Code on success: $responseCode');
+
+        // Đánh dấu là hoàn tất thanh toán thành công
+        completer.complete();
       },
       onPaymentError: (params) {
         print('Params on error: $params');
         responseCode = 'Error';
         print('Response Code on error: $responseCode');
+
+        // Đánh dấu là hoàn tất thanh toán thất bại
+        completer.complete();
       },
     );
+
+    // Chờ kết quả trả về từ VNPAY
+    await completer.future;
   }
 
 }

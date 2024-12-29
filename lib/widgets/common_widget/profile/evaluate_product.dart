@@ -163,6 +163,12 @@ class _EvaluateProductState extends State<EvaluateProduct> {
                             );
                             _rating = 0.0;
                             _commentController.clear();
+                            Get.back();
+                            Get.snackbar(
+                              'Success',
+                              'You have successfully rated',
+                              snackPosition: SnackPosition.TOP,
+                            );
                           } else {
                             // Nếu người dùng chưa nhập đánh giá hoặc bình luận
                             Get.snackbar(
