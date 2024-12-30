@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../view/confirm_human_view.dart';
 import '../../view/login_view.dart';
 import '../../widgets/common_widget/google_map/access_location.dart';
 
@@ -83,7 +84,7 @@ class FirAuth {
           final userRole = userData['role'];
           print('form role1: $userRole');
           if (userRole == 'user') {
-            Get.offAll(() => const AccessLocation());
+            Get.offAll(() => const ConfirmHumanView());
             // Get.offAll(() => const HomeScreenAdmin());
           } else {
             print('form role: $userRole');
@@ -145,7 +146,8 @@ class FirAuth {
       String numberPhone, String? role, Function onSuccess) {
     print("Debug: sex = $sex, numberPhone = $numberPhone"); // Kiểm tra giá trị
     var user = {
-      'HoTen': hoTen,
+      ''
+          '': hoTen,
       'AddRess': addRess,
       'Sex': sex,
       'NumberPhone': numberPhone,
